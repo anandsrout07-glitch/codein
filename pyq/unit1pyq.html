@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 1 PYQs — Data Types &amp; Operators</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --green-soft: #7fd68a26;
+    --blue: #6fb3e0;
+    --blue-soft: #6fb3e026;
+    --purple: #b18cd9;
+    --purple-soft: #b18cd926;
+    --red: #e07f7f;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header{
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  header p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .legend span{
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .tag{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    border-radius: 5px;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .tag-mcq{ color: var(--blue); background: var(--blue-soft); }
+  .tag-vsq{ color: var(--green); background: var(--green-soft); }
+  .tag-sq{  color: var(--accent); background: var(--accent-soft); }
+  .tag-lq{  color: var(--purple); background: var(--purple-soft); }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 22px;
+  }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-body{ flex: 1; min-width: 0; }
+
+  .q-tags{ display: flex; gap: 8px; margin-bottom: 8px; }
+
+  .q-text{
+    font-size: 15.5px;
+    color: var(--text);
+  }
+
+  .q-text b{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .options{
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .options li{
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .q-footer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 22px 20px;
+  }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+
+  .show-btn.is-open{
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+
+  .answer.open{
+    grid-template-rows: 1fr;
+  }
+
+  .answer-inner{
+    overflow: hidden;
+  }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .answer-text{
+    margin: 0;
+    padding: 16px 22px 20px;
+    font-size: 14.5px;
+    color: var(--text);
+  }
+
+  .answer-text p{ margin: 0 0 10px; }
+  .answer-text p:last-child{ margin-bottom: 0; }
+  .answer-text ul{ margin: 8px 0 10px; padding-left: 20px; }
+  .answer-text li{ margin-bottom: 6px; }
+
+  .correct-opt{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--green);
+    background: var(--green-soft);
+    border: 1px solid #7fd68a55;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 16px 22px 0;
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+  }
+
+  section-title{ display:block; }
+  .unit-title{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 36px 0 14px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border);
+  }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Unit 1 — Last 2 Year Questions</p>
+    <h1>Introduction, Data Types &amp; Operators</h1>
+    <p>Keywords, Identifiers, Constants, Variables, Compilation, Pre-processing, Data Types, Memory Representation, Operators, Expressions, Precedence, and Associativity.</p>
+    <div class="legend">
+      <span class="tag-mcq" style="background:var(--blue-soft);color:var(--blue);">MCQ</span>
+      <span class="tag-vsq" style="background:var(--green-soft);color:var(--green);">VSQ</span>
+      <span class="tag-sq" style="background:var(--accent-soft);color:var(--accent);">SQ</span>
+      <span class="tag-lq" style="background:var(--purple-soft);color:var(--purple);">LQ</span>
+    </div>
+  </header>
+
+  <!-- Q1 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q1</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">How to find 2<sup>10</sup> in a C program?</span>
+        <ul class="options">
+          <li>(a) 2^10</li>
+          <li>(b) 2**10</li>
+          <li>(c) 2power(10)</li>
+          <li>(d) None of the above</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a1">Show Answer</button>
+    </div>
+    <div class="answer" id="a1">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (d) None of the above</div>
+        <div class="answer-text">
+          <p>C has no built-in power operator. The <code>^</code> symbol is the bitwise XOR operator, not exponentiation, and <code>**</code>/<code>power()</code> are not valid C syntax. To compute 2<sup>10</sup> you must use <code>pow(2, 10)</code> from <code>math.h</code>, or multiply manually / use a loop or bit-shift (<code>1 &lt;&lt; 10</code>).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q2</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following is a valid identifier in C?</span>
+        <ul class="options">
+          <li>(a) _student*name</li>
+          <li>(b) _student#name</li>
+          <li>(c) _student_name</li>
+          <li>(d) _student@name</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a2">Show Answer</button>
+    </div>
+    <div class="answer" id="a2">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (c) _student_name</div>
+        <div class="answer-text">
+          <p>An identifier in C can only contain letters, digits, and underscores, and must not start with a digit. Special characters like <code>*</code>, <code>#</code>, and <code>@</code> are not allowed, which rules out (a), (b), and (d).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q3</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">What is the difference between a constant and a variable?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a3">Show Answer</button>
+    </div>
+    <div class="answer" id="a3">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A <b>constant</b> is a fixed value that cannot be changed during program execution (e.g. <code>10</code>, <code>'A'</code>, or a value declared with <code>const</code>/<code>#define</code>). A <b>variable</b> is a named memory location whose value can be assigned and modified any number of times while the program runs (e.g. <code>int age = 20;</code> where <code>age</code> can later be updated).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q4</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">Give an example of a ternary operator.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a4">Show Answer</button>
+    </div>
+    <div class="answer" id="a4">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <pre class="code-block"><code><span class="tp">int</span> a = <span class="str">10</span>, b = <span class="str">20</span>, max;
+max = (a &gt; b) ? a : b;   <span class="cm">// max becomes 20</span></code></pre>
+        <div class="answer-text">
+          <p>The ternary (conditional) operator <code>?:</code> takes three operands — a condition, a value if true, and a value if false — and evaluates one expression in place of an <code>if...else</code> statement.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q5</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">What do you mean by the precedence and associativity of an operator?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a5">Show Answer</button>
+    </div>
+    <div class="answer" id="a5">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><b>Precedence</b> determines which operator is evaluated first when an expression contains two or more different operators — for example, <code>*</code> and <code>/</code> have higher precedence than <code>+</code> and <code>-</code>, so multiplication/division is done before addition/subtraction.</p>
+          <p><b>Associativity</b> decides the evaluation order when operators of the <i>same</i> precedence appear together. Most operators (like <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>) are left-to-right associative, while a few (like assignment <code>=</code> and unary operators) are right-to-left associative.</p>
+          <p>Example: in <code>a + b * c</code>, <code>*</code> runs first due to precedence. In <code>a - b - c</code>, left-to-right associativity means it evaluates as <code>(a - b) - c</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q6</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">What do you mean by compilation and pre-processing?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a6">Show Answer</button>
+    </div>
+    <div class="answer" id="a6">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><b>Pre-processing</b> is the first step, handled by the preprocessor before actual compilation. It processes directives that begin with <code>#</code> — such as <code>#include</code> (inserts header file contents), <code>#define</code> (macro substitution), and conditional compilation directives like <code>#ifdef</code> — producing an expanded source file.</p>
+          <p><b>Compilation</b> then converts this preprocessed source code into object code (machine-level instructions) through stages like lexical analysis, syntax analysis, semantic analysis, and code generation. The compiler also checks the code for syntax errors.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q7</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ</span></div>
+        <span class="q-text">Explain the different types of operators in C.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a7">Show Answer</button>
+    </div>
+    <div class="answer" id="a7">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><b>Arithmetic operators:</b> <code>+ - * / %</code> — perform mathematical calculations.</li>
+            <li><b>Relational operators:</b> <code>&lt; &gt; &lt;= &gt;= == !=</code> — compare two values, result is true/false.</li>
+            <li><b>Logical operators:</b> <code>&amp;&amp; || !</code> — combine or invert conditions.</li>
+            <li><b>Bitwise operators:</b> <code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code> — operate on individual bits of integer data.</li>
+            <li><b>Assignment operators:</b> <code>= += -= *= /= %=</code> — assign and update values.</li>
+            <li><b>Increment/decrement operators:</b> <code>++</code> and <code>--</code> — increase or decrease a variable by 1 (prefix or postfix).</li>
+            <li><b>Conditional (ternary) operator:</b> <code>?:</code> — shorthand for if-else in an expression.</li>
+            <li><b>Comma operator:</b> <code>,</code> — evaluates multiple expressions, returning the last one.</li>
+            <li><b>sizeof operator:</b> returns the size (in bytes) of a data type or variable.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q8</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (a)</span></div>
+        <span class="q-text">Which of the following is not a valid keyword in C?</span>
+        <ul class="options">
+          <li>(i) int</li>
+          <li>(ii) float</li>
+          <li>(iii) string</li>
+          <li>(iv) char</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a8">Show Answer</button>
+    </div>
+    <div class="answer" id="a8">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (iii) string</div>
+        <div class="answer-text">
+          <p><code>string</code> is not a keyword or built-in type in C (that's a C++ construct). C uses <code>char</code> arrays or pointers to represent text. <code>int</code>, <code>float</code>, and <code>char</code> are all reserved keywords in C.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q9</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (b)</span></div>
+        <span class="q-text">Which of the following is a valid identifier?</span>
+        <ul class="options">
+          <li>(i) 123abc</li>
+          <li>(ii) a + b</li>
+          <li>(iii) int</li>
+          <li>(iv) _identifier</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a9">Show Answer</button>
+    </div>
+    <div class="answer" id="a9">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (iv) _identifier</div>
+        <div class="answer-text">
+          <p>Identifiers cannot start with a digit (rules out i), cannot contain spaces or operators (rules out ii), and cannot be a reserved keyword (rules out iii, since <code>int</code> is reserved). Starting with an underscore is valid, so <code>_identifier</code> is correct.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q10</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (h)</span></div>
+        <span class="q-text">What is the output? <code>int a = 5; printf("%d", a++);</code></span>
+        <ul class="options">
+          <li>(i) 4</li>
+          <li>(ii) 6</li>
+          <li>(iii) Error</li>
+          <li>(iv) 5</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a10">Show Answer</button>
+    </div>
+    <div class="answer" id="a10">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (iv) 5</div>
+        <div class="answer-text">
+          <p><code>a++</code> is the postfix increment: it returns the current value of <code>a</code> (5) to <code>printf</code> first, and only after that increments <code>a</code> to 6. So the printed output is <code>5</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q11</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (i)</span></div>
+        <span class="q-text">What is the range of values for a signed char?</span>
+        <ul class="options">
+          <li>(i) -256 to 255</li>
+          <li>(ii) -128 to 127</li>
+          <li>(iii) 0 to 255</li>
+          <li>(iv) -32768 to 32767</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a11">Show Answer</button>
+    </div>
+    <div class="answer" id="a11">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (ii) -128 to 127</div>
+        <div class="answer-text">
+          <p>A <code>char</code> is 1 byte (8 bits). As a signed type, one bit is used for the sign, giving a range of -128 to 127. (0 to 255 is the range for an <i>unsigned</i> char, and -32768 to 32767 is the range of a 2-byte signed <code>int</code> on 16-bit systems.)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q12</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (j)</span></div>
+        <span class="q-text">What will 5/2 evaluate to in C if both operands are integers?</span>
+        <ul class="options">
+          <li>(i) 2.5</li>
+          <li>(ii) 2</li>
+          <li>(iii) 3</li>
+          <li>(iv) Undefined</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a12">Show Answer</button>
+    </div>
+    <div class="answer" id="a12">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (ii) 2</div>
+        <div class="answer-text">
+          <p>When both operands of <code>/</code> are integers, C performs integer division and truncates (discards) the fractional part rather than rounding. So <code>5 / 2</code> gives <code>2</code>, not <code>2.5</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q13</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (a)</span></div>
+        <span class="q-text">What is the role of a preprocessor directive in C programming? Give an example.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a13">Show Answer</button>
+    </div>
+    <div class="answer" id="a13">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A preprocessor directive instructs the preprocessor to perform text substitution or file inclusion on the source code <i>before</i> compilation begins. Directives always start with <code>#</code> and are not terminated by a semicolon.</p>
+        </div>
+        <pre class="code-block"><code><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>   <span class="cm">// includes the standard I/O header</span>
+<span class="kw">#define</span> PI <span class="str">3.14159</span>  <span class="cm">// defines a macro constant</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q14</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (b)</span></div>
+        <span class="q-text">Define the precedence and associativity of operators in C with example. Why are they important?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a14">Show Answer</button>
+    </div>
+    <div class="answer" id="a14">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><b>Precedence</b> decides which operator binds tighter among different operators; <b>associativity</b> decides the order of evaluation among operators of equal precedence (left-to-right or right-to-left).</p>
+          <p>Example: <code>10 + 5 * 2</code> evaluates to <code>20</code> (not 30) because <code>*</code> has higher precedence than <code>+</code>. They matter because without fixed rules, the same expression could produce different, ambiguous results — precedence and associativity guarantee every C compiler evaluates an expression the same, predictable way.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q15</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (c)</span></div>
+        <span class="q-text">Write a program in C that accepts two integers and swaps their values without using a temporary variable.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a15">Show Answer</button>
+    </div>
+    <div class="answer" id="a15">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Swap two numbers without a temporary variable</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a, b;
+
+    <span class="fn">printf</span>(<span class="str">"Enter two integers: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d %d"</span>, &amp;a, &amp;b);
+
+    a = a + b;
+    b = a - b;
+    a = a - b;
+
+    <span class="fn">printf</span>(<span class="str">"After swap: a = %d, b = %d\n"</span>, a, b);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: a=5, b=10)</div>
+        <pre class="output-block">Enter two integers: 5 10
+After swap: a = 10, b = 5</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q16</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (a)</span></div>
+        <span class="q-text">Explain the role of a compiler in C programming. Discuss the phases of compilation and pre-processing in detail.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a16">Show Answer</button>
+    </div>
+    <div class="answer" id="a16">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A compiler translates human-readable C source code into machine/object code that the computer's processor can execute, while also checking the program for syntax and some semantic errors.</p>
+          <p><b>Preprocessing</b> (before compilation): handles directives such as <code>#include</code> (inserts header files), <code>#define</code> (macro expansion), and <code>#ifdef</code>/<code>#endif</code> (conditional compilation), producing an expanded translation unit.</p>
+          <ul>
+            <li><b>Lexical analysis:</b> breaks source code into tokens (keywords, identifiers, operators, literals).</li>
+            <li><b>Syntax analysis (parsing):</b> checks tokens against C grammar rules and builds a parse tree.</li>
+            <li><b>Semantic analysis:</b> checks type compatibility and meaning (e.g. correct use of variables).</li>
+            <li><b>Intermediate code generation:</b> produces a machine-independent intermediate representation.</li>
+            <li><b>Code optimization:</b> improves the intermediate code for speed/size.</li>
+            <li><b>Target code generation:</b> converts optimized code into assembly/object (machine) code.</li>
+            <li><b>Linking:</b> combines object code with library code to produce the final executable.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q17</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (b)</span></div>
+        <span class="q-text">Explain the various operators in C programming with examples (Include arithmetic, logical, bitwise, and conditional operators).</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a17">Show Answer</button>
+    </div>
+    <div class="answer" id="a17">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><b>Arithmetic operators</b> (<code>+ - * / %</code>): perform basic math. Example: <code>a + b</code>, <code>a % b</code> (remainder).</li>
+            <li><b>Logical operators</b> (<code>&amp;&amp; || !</code>): combine boolean conditions. Example: <code>(a &gt; 0 &amp;&amp; b &gt; 0)</code> is true only if both are positive.</li>
+            <li><b>Bitwise operators</b> (<code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code>): act on the binary representation of integers. Example: <code>a &amp; b</code> performs bit-by-bit AND; <code>a &lt;&lt; 1</code> shifts bits left, doubling the value.</li>
+            <li><b>Conditional (ternary) operator</b> (<code>?:</code>): a compact if-else. Example: <code>max = (a &gt; b) ? a : b;</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q18</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ (a)</span></div>
+        <span class="q-text">Discuss the different data types available in C, their memory representation, size, and range. Discuss the significance of modifiers (short, long, signed, unsigned) for data types in C with example.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a18">Show Answer</button>
+    </div>
+    <div class="answer" id="a18">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>C provides several basic (primitive) data types, each stored differently in memory:</p>
+          <ul>
+            <li><b>int:</b> typically 4 bytes, stores whole numbers, range roughly -2,147,483,648 to 2,147,483,647.</li>
+            <li><b>char:</b> 1 byte, stores a single character (or small integer), range -128 to 127 (signed) or 0 to 255 (unsigned).</li>
+            <li><b>float:</b> 4 bytes, stores single-precision floating-point numbers (~6-7 significant digits).</li>
+            <li><b>double:</b> 8 bytes, stores double-precision floating-point numbers (~15-16 significant digits), used when higher accuracy is needed.</li>
+          </ul>
+          <p>Internally, integer types are stored as binary two's-complement values, and floating types are stored using the IEEE-754 format (sign bit, exponent, mantissa).</p>
+          <p><b>Modifiers</b> adjust the size/range of a base type:</p>
+          <ul>
+            <li><code>short</code> reduces the storage size (e.g. <code>short int</code> is often 2 bytes).</li>
+            <li><code>long</code> increases the storage size (e.g. <code>long int</code> is often 8 bytes, <code>long long int</code> even larger).</li>
+            <li><code>signed</code> (default) allows both negative and positive values.</li>
+            <li><code>unsigned</code> uses the sign bit for magnitude instead, doubling the positive range but disallowing negative values — e.g. <code>unsigned int</code> ranges from 0 to 4,294,967,295 instead of roughly ±2.1 billion.</li>
+          </ul>
+          <p>Choosing the right type/modifier combination balances memory usage against the range and precision a program needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>&lt;/&gt; tap a question type tag to know what's expected — then reveal the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

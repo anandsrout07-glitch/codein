@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Practice — Control Flow, Loops &amp; Arrays</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --blue: #6fb3e0;
+    --purple: #b18cd9;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{ max-width: 780px; margin: 0 auto; }
+
+  header{
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{ margin: 0 0 8px; font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+  header p{ margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  .section-title{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 52px 0 20px;
+  }
+  .section-title:first-of-type{ margin-top: 0; }
+
+  .section-title h2{
+    font-size: 15.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .section-title .rule{
+    height: 1px;
+    background: var(--border);
+    flex: 1;
+  }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{ display: flex; align-items: flex-start; gap: 14px; padding: 20px 22px; }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-text{ font-size: 15.5px; color: var(--text); }
+  .q-text b{ color: var(--text); font-weight: 600; }
+
+  .q-footer{ display: flex; justify-content: flex-end; padding: 0 22px 20px; }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+  .show-btn.is-open{ background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+  .answer.open{ grid-template-rows: 1fr; }
+  .answer-inner{ overflow: hidden; }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+    white-space: pre-wrap;
+  }
+  pre.output-block .in{ color: var(--blue); }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">C Fundamentals — Set 03</p>
+    <h1>Control Flow, Loops &amp; Arrays</h1>
+    <p>Read each question, work it out, then reveal the answer to check your code and its output.</p>
+  </header>
+
+  <!-- ===================== SECTION: DECISION MAKING & SWITCH ===================== -->
+  <div class="section-title"><h2>Decision Making &amp; Switch Statements</h2><div class="rule"></div></div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D1</span>
+      <span class="q-text"><b>Greatest of Three:</b> Find the greatest among three numbers.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d1">Show Answer</button></div>
+    <div class="answer" id="d1"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Greatest of three numbers</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">23</span>, b = <span class="str">45</span>, c = <span class="str">12</span>;
+
+    <span class="kw">if</span> (a &gt;= b &amp;&amp; a &gt;= c)
+        <span class="fn">printf</span>(<span class="str">"Greatest number is: %d\n"</span>, a);
+    <span class="kw">else if</span> (b &gt;= a &amp;&amp; b &gt;= c)
+        <span class="fn">printf</span>(<span class="str">"Greatest number is: %d\n"</span>, b);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"Greatest number is: %d\n"</span>, c);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Greatest number is: 45</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D2</span>
+      <span class="q-text"><b>Menu-Driven Arithmetic:</b> Arithmetic operations using <code>switch case</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d2">Show Answer</button></div>
+    <div class="answer" id="d2"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Menu-driven arithmetic using switch</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> choice;
+    <span class="tp">float</span> a = <span class="str">15</span>, b = <span class="str">4</span>, result;
+
+    <span class="fn">printf</span>(<span class="str">"1. Add\n2. Subtract\n3. Multiply\n4. Divide\n"</span>);
+    <span class="fn">printf</span>(<span class="str">"Enter choice: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;choice);
+
+    <span class="kw">switch</span> (choice) {
+        <span class="kw">case</span> <span class="str">1</span>: result = a + b; <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">2</span>: result = a - b; <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">3</span>: result = a * b; <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">4</span>: result = a / b; <span class="kw">break</span>;
+        <span class="kw">default</span>:
+            <span class="fn">printf</span>(<span class="str">"Invalid choice\n"</span>);
+            <span class="kw">return</span> <span class="str">0</span>;
+    }
+    <span class="fn">printf</span>(<span class="str">"Result: %.2f\n"</span>, result);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">1. Add
+2. Subtract
+3. Multiply
+4. Divide
+Enter choice: <span class="in">3</span>
+Result: 60.00</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D3</span>
+      <span class="q-text"><b>Simple Calculator:</b> Take two numbers and an operator to perform operations using <code>switch</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d3">Show Answer</button></div>
+    <div class="answer" id="d3"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Simple calculator using switch</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">float</span> a, b, result;
+    <span class="tp">char</span> op;
+
+    <span class="fn">printf</span>(<span class="str">"Enter first number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%f"</span>, &amp;a);
+    <span class="fn">printf</span>(<span class="str">"Enter operator (+, -, *, /): "</span>);
+    <span class="fn">scanf</span>(<span class="str">" %c"</span>, &amp;op);
+    <span class="fn">printf</span>(<span class="str">"Enter second number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%f"</span>, &amp;b);
+
+    <span class="kw">switch</span> (op) {
+        <span class="kw">case</span> <span class="str">'+'</span>: result = a + b; <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'-'</span>: result = a - b; <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'*'</span>: result = a * b; <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'/'</span>: result = a / b; <span class="kw">break</span>;
+        <span class="kw">default</span>:
+            <span class="fn">printf</span>(<span class="str">"Invalid operator\n"</span>);
+            <span class="kw">return</span> <span class="str">0</span>;
+    }
+    <span class="fn">printf</span>(<span class="str">"Result: %.2f\n"</span>, result);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Enter first number: <span class="in">12</span>
+Enter operator (+, -, *, /): <span class="in">+</span>
+Enter second number: <span class="in">8</span>
+Result: 20.00</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D4</span>
+      <span class="q-text"><b>Day of the Week:</b> Input a number (1–7) and print the day name using <code>switch</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d4">Show Answer</button></div>
+    <div class="answer" id="d4"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Day of the week using switch</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> day = <span class="str">4</span>;
+
+    <span class="kw">switch</span> (day) {
+        <span class="kw">case</span> <span class="str">1</span>: <span class="fn">printf</span>(<span class="str">"Monday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">2</span>: <span class="fn">printf</span>(<span class="str">"Tuesday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">3</span>: <span class="fn">printf</span>(<span class="str">"Wednesday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">4</span>: <span class="fn">printf</span>(<span class="str">"Thursday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">5</span>: <span class="fn">printf</span>(<span class="str">"Friday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">6</span>: <span class="fn">printf</span>(<span class="str">"Saturday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">7</span>: <span class="fn">printf</span>(<span class="str">"Sunday\n"</span>); <span class="kw">break</span>;
+        <span class="kw">default</span>: <span class="fn">printf</span>(<span class="str">"Invalid day number\n"</span>);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Thursday</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D5</span>
+      <span class="q-text"><b>Grade System:</b> Input a character grade and display its meaning using <code>switch</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d5">Show Answer</button></div>
+    <div class="answer" id="d5"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Grade meaning using switch</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> grade = <span class="str">'B'</span>;
+
+    <span class="kw">switch</span> (grade) {
+        <span class="kw">case</span> <span class="str">'A'</span>: <span class="fn">printf</span>(<span class="str">"Excellent\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'B'</span>: <span class="fn">printf</span>(<span class="str">"Very Good\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'C'</span>: <span class="fn">printf</span>(<span class="str">"Good\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'D'</span>: <span class="fn">printf</span>(<span class="str">"Pass\n"</span>); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">'F'</span>: <span class="fn">printf</span>(<span class="str">"Fail\n"</span>); <span class="kw">break</span>;
+        <span class="kw">default</span>: <span class="fn">printf</span>(<span class="str">"Invalid grade\n"</span>);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Very Good</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D6</span>
+      <span class="q-text"><b>Geometric Area:</b> Menu-driven program for the area of a circle, rectangle, and triangle using <code>switch</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d6">Show Answer</button></div>
+    <div class="answer" id="d6"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Menu-driven area of circle, rectangle, triangle</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#define</span> PI <span class="str">3.14159</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> choice;
+    <span class="tp">float</span> area;
+
+    <span class="fn">printf</span>(<span class="str">"1. Circle\n2. Rectangle\n3. Triangle\n"</span>);
+    <span class="fn">printf</span>(<span class="str">"Enter choice: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;choice);
+
+    <span class="kw">switch</span> (choice) {
+        <span class="kw">case</span> <span class="str">1</span>: {
+            <span class="tp">float</span> r = <span class="str">7</span>;
+            area = PI * r * r;
+            <span class="fn">printf</span>(<span class="str">"Area of circle: %.2f\n"</span>, area);
+            <span class="kw">break</span>;
+        }
+        <span class="kw">case</span> <span class="str">2</span>: {
+            <span class="tp">float</span> l = <span class="str">5</span>, w = <span class="str">3</span>;
+            area = l * w;
+            <span class="fn">printf</span>(<span class="str">"Area of rectangle: %.2f\n"</span>, area);
+            <span class="kw">break</span>;
+        }
+        <span class="kw">case</span> <span class="str">3</span>: {
+            <span class="tp">float</span> base = <span class="str">6</span>, height = <span class="str">4</span>;
+            area = <span class="str">0.5</span> * base * height;
+            <span class="fn">printf</span>(<span class="str">"Area of triangle: %.2f\n"</span>, area);
+            <span class="kw">break</span>;
+        }
+        <span class="kw">default</span>:
+            <span class="fn">printf</span>(<span class="str">"Invalid choice\n"</span>);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">1. Circle
+2. Rectangle
+3. Triangle
+Enter choice: <span class="in">1</span>
+Area of circle: 153.94</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">D7</span>
+      <span class="q-text"><b>Vowel/Consonant Checker:</b> Input a character and check if it is a vowel or consonant using <code>switch</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="d7">Show Answer</button></div>
+    <div class="answer" id="d7"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Vowel or consonant using switch</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> ch = <span class="str">'e'</span>;
+
+    <span class="kw">switch</span> (<span class="fn">tolower</span>(ch)) {
+        <span class="kw">case</span> <span class="str">'a'</span>: <span class="kw">case</span> <span class="str">'e'</span>: <span class="kw">case</span> <span class="str">'i'</span>: <span class="kw">case</span> <span class="str">'o'</span>: <span class="kw">case</span> <span class="str">'u'</span>:
+            <span class="fn">printf</span>(<span class="str">"%c is a vowel\n"</span>, ch);
+            <span class="kw">break</span>;
+        <span class="kw">default</span>:
+            <span class="fn">printf</span>(<span class="str">"%c is a consonant\n"</span>, ch);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">e is a vowel</pre>
+    </div></div>
+  </div>
+
+  <!-- ===================== SECTION: LOOPING ===================== -->
+  <div class="section-title"><h2>Looping Statements (While, Do…While, For)</h2><div class="rule"></div></div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L1</span>
+      <span class="q-text"><b>Sum/Product of Digits:</b> Print the sum and product of the digits of an integer.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l1">Show Answer</button></div>
+    <div class="answer" id="l1"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Sum and product of digits</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">2345</span>, sum = <span class="str">0</span>, product = <span class="str">1</span>, digit;
+
+    <span class="kw">while</span> (n != <span class="str">0</span>) {
+        digit = n % <span class="str">10</span>;
+        sum += digit;
+        product *= digit;
+        n /= <span class="str">10</span>;
+    }
+    <span class="fn">printf</span>(<span class="str">"Sum of digits: %d\n"</span>, sum);
+    <span class="fn">printf</span>(<span class="str">"Product of digits: %d\n"</span>, product);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Sum of digits: 14
+Product of digits: 120</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L2</span>
+      <span class="q-text"><b>Reverse a Number:</b> Reverse a number (using generic loops or a specific <code>while</code> loop).</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l2">Show Answer</button></div>
+    <div class="answer" id="l2"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Reverse a number using while</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">1234</span>, reversed = <span class="str">0</span>, digit;
+
+    <span class="kw">while</span> (n != <span class="str">0</span>) {
+        digit = n % <span class="str">10</span>;
+        reversed = reversed * <span class="str">10</span> + digit;
+        n /= <span class="str">10</span>;
+    }
+    <span class="fn">printf</span>(<span class="str">"Reversed number: %d\n"</span>, reversed);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Reversed number: 4321</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L3</span>
+      <span class="q-text"><b>Sum of Series:</b> Compute S = 1 + 1/2 + 1/3 + 1/4 + ...</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l3">Show Answer</button></div>
+    <div class="answer" id="l3"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Sum of series 1 + 1/2 + 1/3 + ... + 1/n</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">5</span>, i;
+    <span class="tp">float</span> sum = <span class="str">0</span>;
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= n; i++)
+        sum += <span class="str">1.0</span> / i;
+
+    <span class="fn">printf</span>(<span class="str">"Sum of series: %.4f\n"</span>, sum);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Sum of series: 2.2833</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L4</span>
+      <span class="q-text"><b>Sum of Alternating Series:</b> Compute S = 1 − 2 + 3 − 4 + 5 ...</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l4">Show Answer</button></div>
+    <div class="answer" id="l4"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Alternating series 1 - 2 + 3 - 4 + 5 ...</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">5</span>, i, sum = <span class="str">0</span>;
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= n; i++) {
+        <span class="kw">if</span> (i % <span class="str">2</span> == <span class="str">0</span>)
+            sum -= i;
+        <span class="kw">else</span>
+            sum += i;
+    }
+    <span class="fn">printf</span>(<span class="str">"Sum of series: %d\n"</span>, sum);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Sum of series: 3</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L5</span>
+      <span class="q-text"><b>Factors of a Number:</b> Compute the factors of a given number.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l5">Show Answer</button></div>
+    <div class="answer" id="l5"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Factors of a number</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">36</span>, i;
+
+    <span class="fn">printf</span>(<span class="str">"Factors of %d: "</span>, n);
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= n; i++) {
+        <span class="kw">if</span> (n % i == <span class="str">0</span>)
+            <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Factors of 36: 1 2 3 4 6 9 12 18 36</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L6</span>
+      <span class="q-text"><b>Star Pattern:</b> Print a triangle of stars.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l6">Show Answer</button></div>
+    <div class="answer" id="l6"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Triangle of stars</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> rows = <span class="str">5</span>, i, j;
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= rows; i++) {
+        <span class="kw">for</span> (j = <span class="str">1</span>; j &lt;= i; j++)
+            <span class="fn">printf</span>(<span class="str">"* "</span>);
+        <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">* 
+* * 
+* * * 
+* * * * 
+* * * * * </pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L7</span>
+      <span class="q-text"><b>Print 1 to N:</b> Print numbers from 1 to N using a <code>while</code> loop.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l7">Show Answer</button></div>
+    <div class="answer" id="l7"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Print 1 to N using while</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">10</span>, i = <span class="str">1</span>;
+
+    <span class="kw">while</span> (i &lt;= n) {
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+        i++;
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">1 2 3 4 5 6 7 8 9 10 </pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L8</span>
+      <span class="q-text"><b>Palindrome (Number):</b> Check if a number is a palindrome using <code>while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l8">Show Answer</button></div>
+    <div class="answer" id="l8"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Palindrome number check</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">12321</span>, original = n, reversed = <span class="str">0</span>, digit;
+
+    <span class="kw">while</span> (n != <span class="str">0</span>) {
+        digit = n % <span class="str">10</span>;
+        reversed = reversed * <span class="str">10</span> + digit;
+        n /= <span class="str">10</span>;
+    }
+
+    <span class="kw">if</span> (original == reversed)
+        <span class="fn">printf</span>(<span class="str">"%d is a palindrome\n"</span>, original);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is not a palindrome\n"</span>, original);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">12321 is a palindrome</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L9</span>
+      <span class="q-text"><b>Fibonacci Series:</b> Generate the Fibonacci series up to N terms using <code>while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l9">Show Answer</button></div>
+    <div class="answer" id="l9"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Fibonacci series up to n terms</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">8</span>, a = <span class="str">0</span>, b = <span class="str">1</span>, next, count = <span class="str">0</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Fibonacci series: "</span>);
+    <span class="kw">while</span> (count &lt; n) {
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, a);
+        next = a + b;
+        a = b;
+        b = next;
+        count++;
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Fibonacci series: 0 1 1 2 3 5 8 13 </pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L10</span>
+      <span class="q-text"><b>Multiplication Table:</b> Print the table of a number using <code>do…while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l10">Show Answer</button></div>
+    <div class="answer" id="l10"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Multiplication table using do-while</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">7</span>, i = <span class="str">1</span>;
+
+    <span class="kw">do</span> {
+        <span class="fn">printf</span>(<span class="str">"%d x %d = %d\n"</span>, n, i, n * i);
+        i++;
+    } <span class="kw">while</span> (i &lt;= <span class="str">10</span>);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">7 x 1 = 7
+7 x 2 = 14
+7 x 3 = 21
+7 x 4 = 28
+7 x 5 = 35
+7 x 6 = 42
+7 x 7 = 49
+7 x 8 = 56
+7 x 9 = 63
+7 x 10 = 70</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L11</span>
+      <span class="q-text"><b>Menu-Driven Calculator:</b> A calculator that repeats until the user exits, using <code>do…while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l11">Show Answer</button></div>
+    <div class="answer" id="l11"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Menu-driven calculator that repeats until exit</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> choice;
+    <span class="tp">float</span> a, b;
+
+    <span class="kw">do</span> {
+        <span class="fn">printf</span>(<span class="str">"\n1. Add  2. Subtract  3. Multiply  4. Divide  5. Exit\n"</span>);
+        <span class="fn">printf</span>(<span class="str">"Enter choice: "</span>);
+        <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;choice);
+
+        <span class="kw">if</span> (choice &gt;= <span class="str">1</span> &amp;&amp; choice &lt;= <span class="str">4</span>) {
+            <span class="fn">printf</span>(<span class="str">"Enter two numbers: "</span>);
+            <span class="fn">scanf</span>(<span class="str">"%f %f"</span>, &amp;a, &amp;b);
+        }
+
+        <span class="kw">switch</span> (choice) {
+            <span class="kw">case</span> <span class="str">1</span>: <span class="fn">printf</span>(<span class="str">"Result: %.2f\n"</span>, a + b); <span class="kw">break</span>;
+            <span class="kw">case</span> <span class="str">2</span>: <span class="fn">printf</span>(<span class="str">"Result: %.2f\n"</span>, a - b); <span class="kw">break</span>;
+            <span class="kw">case</span> <span class="str">3</span>: <span class="fn">printf</span>(<span class="str">"Result: %.2f\n"</span>, a * b); <span class="kw">break</span>;
+            <span class="kw">case</span> <span class="str">4</span>: <span class="fn">printf</span>(<span class="str">"Result: %.2f\n"</span>, a / b); <span class="kw">break</span>;
+            <span class="kw">case</span> <span class="str">5</span>: <span class="fn">printf</span>(<span class="str">"Exiting...\n"</span>); <span class="kw">break</span>;
+            <span class="kw">default</span>: <span class="fn">printf</span>(<span class="str">"Invalid choice\n"</span>);
+        }
+    } <span class="kw">while</span> (choice != <span class="str">5</span>);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">1. Add  2. Subtract  3. Multiply  4. Divide  5. Exit
+Enter choice: <span class="in">1</span>
+Enter two numbers: <span class="in">10 5</span>
+Result: 15.00
+
+1. Add  2. Subtract  3. Multiply  4. Divide  5. Exit
+Enter choice: <span class="in">5</span>
+Exiting...</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L12</span>
+      <span class="q-text"><b>Cumulative Sum:</b> Read numbers until the user enters 0 and print the sum using <code>do…while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l12">Show Answer</button></div>
+    <div class="answer" id="l12"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Cumulative sum until 0 is entered</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, sum = <span class="str">0</span>;
+
+    <span class="kw">do</span> {
+        <span class="fn">printf</span>(<span class="str">"Enter a number (0 to stop): "</span>);
+        <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+        sum += n;
+    } <span class="kw">while</span> (n != <span class="str">0</span>);
+
+    <span class="fn">printf</span>(<span class="str">"Total sum: %d\n"</span>, sum);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Enter a number (0 to stop): <span class="in">4</span>
+Enter a number (0 to stop): <span class="in">7</span>
+Enter a number (0 to stop): <span class="in">3</span>
+Enter a number (0 to stop): <span class="in">0</span>
+Total sum: 14</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L13</span>
+      <span class="q-text"><b>Armstrong Number:</b> Check if a number is Armstrong using <code>do…while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l13">Show Answer</button></div>
+    <div class="answer" id="l13"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Armstrong number check</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;math.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">153</span>, original, remainder, result = <span class="str">0</span>, digits = <span class="str">0</span>, temp;
+
+    original = n;
+    temp = n;
+    <span class="kw">do</span> {
+        temp /= <span class="str">10</span>;
+        digits++;
+    } <span class="kw">while</span> (temp != <span class="str">0</span>);
+
+    temp = n;
+    <span class="kw">do</span> {
+        remainder = temp % <span class="str">10</span>;
+        result += <span class="fn">pow</span>(remainder, digits);
+        temp /= <span class="str">10</span>;
+    } <span class="kw">while</span> (temp != <span class="str">0</span>);
+
+    <span class="kw">if</span> (result == original)
+        <span class="fn">printf</span>(<span class="str">"%d is an Armstrong number\n"</span>, original);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is not an Armstrong number\n"</span>, original);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">153 is an Armstrong number</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L14</span>
+      <span class="q-text"><b>Digit Counter:</b> Count digits of a number using <code>do…while</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l14">Show Answer</button></div>
+    <div class="answer" id="l14"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Count digits of a number</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">98765</span>, count = <span class="str">0</span>;
+
+    <span class="kw">do</span> {
+        n /= <span class="str">10</span>;
+        count++;
+    } <span class="kw">while</span> (n != <span class="str">0</span>);
+
+    <span class="fn">printf</span>(<span class="str">"Number of digits: %d\n"</span>, count);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Number of digits: 5</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L15</span>
+      <span class="q-text"><b>Factorial:</b> Print the factorial of a number using <code>for</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l15">Show Answer</button></div>
+    <div class="answer" id="l15"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Factorial using for loop</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">6</span>, i;
+    <span class="tp">unsigned long long</span> fact = <span class="str">1</span>;
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= n; i++)
+        fact *= i;
+
+    <span class="fn">printf</span>(<span class="str">"Factorial of %d is %llu\n"</span>, n, fact);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Factorial of 6 is 720</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L16</span>
+      <span class="q-text"><b>Prime Numbers:</b> Print all prime numbers between 1 and N using <code>for</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l16">Show Answer</button></div>
+    <div class="answer" id="l16"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Prime numbers up to n</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">30</span>, i, j, isPrime;
+
+    <span class="fn">printf</span>(<span class="str">"Prime numbers up to %d: "</span>, n);
+    <span class="kw">for</span> (i = <span class="str">2</span>; i &lt;= n; i++) {
+        isPrime = <span class="str">1</span>;
+        <span class="kw">for</span> (j = <span class="str">2</span>; j * j &lt;= i; j++) {
+            <span class="kw">if</span> (i % j == <span class="str">0</span>) {
+                isPrime = <span class="str">0</span>;
+                <span class="kw">break</span>;
+            }
+        }
+        <span class="kw">if</span> (isPrime)
+            <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Prime numbers up to 30: 2 3 5 7 11 13 17 19 23 29 </pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">L17</span>
+      <span class="q-text"><b>Perfect Number:</b> Check if a number is perfect using <code>for</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="l17">Show Answer</button></div>
+    <div class="answer" id="l17"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Perfect number check</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">28</span>, i, sum = <span class="str">0</span>;
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt; n; i++) {
+        <span class="kw">if</span> (n % i == <span class="str">0</span>)
+            sum += i;
+    }
+
+    <span class="kw">if</span> (sum == n)
+        <span class="fn">printf</span>(<span class="str">"%d is a perfect number\n"</span>, n);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is not a perfect number\n"</span>, n);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">28 is a perfect number</pre>
+    </div></div>
+  </div>
+
+  <!-- ===================== SECTION: ARRAYS & STRINGS ===================== -->
+  <div class="section-title"><h2>Arrays &amp; Strings</h2><div class="rule"></div></div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">A1</span>
+      <span class="q-text"><b>Array Operations:</b> A menu-driven program to print even/odd elements, calculate sum/average, find max/min, remove duplicates, and reverse an array.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="a1">Show Answer</button></div>
+    <div class="answer" id="a1"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Menu-driven array operations</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">void</span> <span class="fn">printEvenOdd</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n) {
+    <span class="fn">printf</span>(<span class="str">"Even elements: "</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; i &lt; n; i++)
+        <span class="kw">if</span> (arr[i] % <span class="str">2</span> == <span class="str">0</span>) <span class="fn">printf</span>(<span class="str">"%d "</span>, arr[i]);
+    <span class="fn">printf</span>(<span class="str">"\nOdd elements: "</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; i &lt; n; i++)
+        <span class="kw">if</span> (arr[i] % <span class="str">2</span> != <span class="str">0</span>) <span class="fn">printf</span>(<span class="str">"%d "</span>, arr[i]);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}
+
+<span class="tp">void</span> <span class="fn">sumAverage</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n) {
+    <span class="tp">int</span> sum = <span class="str">0</span>;
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; i &lt; n; i++) sum += arr[i];
+    <span class="fn">printf</span>(<span class="str">"Sum: %d, Average: %.2f\n"</span>, sum, (<span class="tp">float</span>)sum / n);
+}
+
+<span class="tp">void</span> <span class="fn">maxMin</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n) {
+    <span class="tp">int</span> max = arr[<span class="str">0</span>], min = arr[<span class="str">0</span>];
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">1</span>; i &lt; n; i++) {
+        <span class="kw">if</span> (arr[i] &gt; max) max = arr[i];
+        <span class="kw">if</span> (arr[i] &lt; min) min = arr[i];
+    }
+    <span class="fn">printf</span>(<span class="str">"Max: %d, Min: %d\n"</span>, max, min);
+}
+
+<span class="tp">void</span> <span class="fn">removeDuplicates</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n) {
+    <span class="fn">printf</span>(<span class="str">"Unique elements: "</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; i &lt; n; i++) {
+        <span class="tp">int</span> isDup = <span class="str">0</span>;
+        <span class="kw">for</span> (<span class="tp">int</span> j = <span class="str">0</span>; j &lt; i; j++)
+            <span class="kw">if</span> (arr[i] == arr[j]) isDup = <span class="str">1</span>;
+        <span class="kw">if</span> (!isDup) <span class="fn">printf</span>(<span class="str">"%d "</span>, arr[i]);
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}
+
+<span class="tp">void</span> <span class="fn">reverseArray</span>(<span class="tp">int</span> arr[], <span class="tp">int</span> n) {
+    <span class="fn">printf</span>(<span class="str">"Reversed array: "</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = n - <span class="str">1</span>; i &gt;= <span class="str">0</span>; i--)
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, arr[i]);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> arr[] = {<span class="str">4</span>, <span class="str">8</span>, <span class="str">15</span>, <span class="str">8</span>, <span class="str">16</span>, <span class="str">23</span>, <span class="str">4</span>, <span class="str">42</span>};
+    <span class="tp">int</span> n = <span class="str">8</span>, choice;
+
+    <span class="fn">printf</span>(<span class="str">"1. Even/Odd  2. Sum/Average  3. Max/Min  4. Remove Duplicates  5. Reverse\n"</span>);
+    <span class="fn">printf</span>(<span class="str">"Enter choice: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;choice);
+
+    <span class="kw">switch</span> (choice) {
+        <span class="kw">case</span> <span class="str">1</span>: <span class="fn">printEvenOdd</span>(arr, n); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">2</span>: <span class="fn">sumAverage</span>(arr, n); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">3</span>: <span class="fn">maxMin</span>(arr, n); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">4</span>: <span class="fn">removeDuplicates</span>(arr, n); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">5</span>: <span class="fn">reverseArray</span>(arr, n); <span class="kw">break</span>;
+        <span class="kw">default</span>: <span class="fn">printf</span>(<span class="str">"Invalid choice\n"</span>);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">1. Even/Odd  2. Sum/Average  3. Max/Min  4. Remove Duplicates  5. Reverse
+Enter choice: <span class="in">4</span>
+Unique elements: 4 8 15 16 23 42</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">A2</span>
+      <span class="q-text"><b>Array Merging:</b> Merge two ordered arrays into one ordered array.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="a2">Show Answer</button></div>
+    <div class="answer" id="a2"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Merge two ordered arrays</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a[] = {<span class="str">1</span>, <span class="str">3</span>, <span class="str">5</span>, <span class="str">7</span>};
+    <span class="tp">int</span> b[] = {<span class="str">2</span>, <span class="str">4</span>, <span class="str">6</span>, <span class="str">8</span>, <span class="str">10</span>};
+    <span class="tp">int</span> n1 = <span class="str">4</span>, n2 = <span class="str">5</span>;
+    <span class="tp">int</span> merged[<span class="str">9</span>];
+    <span class="tp">int</span> i = <span class="str">0</span>, j = <span class="str">0</span>, k = <span class="str">0</span>;
+
+    <span class="kw">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) {
+        <span class="kw">if</span> (a[i] &lt;= b[j])
+            merged[k++] = a[i++];
+        <span class="kw">else</span>
+            merged[k++] = b[j++];
+    }
+    <span class="kw">while</span> (i &lt; n1) merged[k++] = a[i++];
+    <span class="kw">while</span> (j &lt; n2) merged[k++] = b[j++];
+
+    <span class="fn">printf</span>(<span class="str">"Merged array: "</span>);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; n1 + n2; i++)
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, merged[i]);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Merged array: 1 2 3 4 5 6 7 8 10 </pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">A3</span>
+      <span class="q-text"><b>Alphabet Frequency:</b> Print a table indicating the number of occurrences of each alphabet in text.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="a3">Show Answer</button></div>
+    <div class="answer" id="a3"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Frequency of each letter in text</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> text[] = <span class="str">"The quick brown fox jumps over the lazy dog"</span>;
+    <span class="tp">int</span> freq[<span class="str">26</span>] = {<span class="str">0</span>};
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; text[i] != <span class="str">'\0'</span>; i++) {
+        <span class="kw">if</span> (<span class="fn">isalpha</span>(text[i])) {
+            <span class="tp">int</span> index = <span class="fn">tolower</span>(text[i]) - <span class="str">'a'</span>;
+            freq[index]++;
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Letter  Count\n"</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; i &lt; <span class="str">26</span>; i++) {
+        <span class="kw">if</span> (freq[i] &gt; <span class="str">0</span>)
+            <span class="fn">printf</span>(<span class="str">"  %c      %d\n"</span>, <span class="str">'a'</span> + i, freq[i]);
+    }
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Letter  Count
+  a      1
+  b      1
+  c      1
+  d      1
+  e      3
+  f      1
+  g      1
+  h      2
+  i      1
+  j      1
+  k      1
+  l      1
+  m      1
+  n      1
+  o      4
+  p      1
+  q      1
+  r      2
+  s      1
+  t      2
+  u      2
+  v      1
+  w      1
+  x      1
+  y      1
+  z      1</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">A4</span>
+      <span class="q-text"><b>String Operations:</b> A menu-driven program for showing the address of each character, concatenating strings without <code>strcat</code>, comparing two strings, converting case, calculating the number of vowels, and reversing a string.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="a4">Show Answer</button></div>
+    <div class="answer" id="a4"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Menu-driven string operations</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;string.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">void</span> <span class="fn">showAddresses</span>(<span class="tp">char</span> str[]) {
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++)
+        <span class="fn">printf</span>(<span class="str">"Address of '%c': %p\n"</span>, str[i], (<span class="tp">void</span>*)&amp;str[i]);
+}
+
+<span class="tp">void</span> <span class="fn">concatWithoutStrcat</span>(<span class="tp">char</span> s1[], <span class="tp">char</span> s2[]) {
+    <span class="tp">int</span> i = <span class="str">0</span>, j = <span class="str">0</span>;
+    <span class="kw">while</span> (s1[i] != <span class="str">'\0'</span>) i++;
+    <span class="kw">while</span> (s2[j] != <span class="str">'\0'</span>) {
+        s1[i] = s2[j];
+        i++; j++;
+    }
+    s1[i] = <span class="str">'\0'</span>;
+    <span class="fn">printf</span>(<span class="str">"Concatenated string: %s\n"</span>, s1);
+}
+
+<span class="tp">void</span> <span class="fn">compareStrings</span>(<span class="tp">char</span> s1[], <span class="tp">char</span> s2[]) {
+    <span class="tp">int</span> result = <span class="fn">strcmp</span>(s1, s2);
+    <span class="kw">if</span> (result == <span class="str">0</span>)
+        <span class="fn">printf</span>(<span class="str">"Strings are equal\n"</span>);
+    <span class="kw">else if</span> (result &lt; <span class="str">0</span>)
+        <span class="fn">printf</span>(<span class="str">"\"%s\" comes before \"%s\"\n"</span>, s1, s2);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"\"%s\" comes after \"%s\"\n"</span>, s1, s2);
+}
+
+<span class="tp">void</span> <span class="fn">convertCase</span>(<span class="tp">char</span> str[]) {
+    <span class="fn">printf</span>(<span class="str">"Converted: "</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++) {
+        <span class="kw">if</span> (<span class="fn">islower</span>(str[i]))
+            <span class="fn">printf</span>(<span class="str">"%c"</span>, <span class="fn">toupper</span>(str[i]));
+        <span class="kw">else</span>
+            <span class="fn">printf</span>(<span class="str">"%c"</span>, <span class="fn">tolower</span>(str[i]));
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}
+
+<span class="tp">void</span> <span class="fn">countVowels</span>(<span class="tp">char</span> str[]) {
+    <span class="tp">int</span> count = <span class="str">0</span>;
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++) {
+        <span class="tp">char</span> c = <span class="fn">tolower</span>(str[i]);
+        <span class="kw">if</span> (c==<span class="str">'a'</span>||c==<span class="str">'e'</span>||c==<span class="str">'i'</span>||c==<span class="str">'o'</span>||c==<span class="str">'u'</span>)
+            count++;
+    }
+    <span class="fn">printf</span>(<span class="str">"Number of vowels: %d\n"</span>, count);
+}
+
+<span class="tp">void</span> <span class="fn">reverseString</span>(<span class="tp">char</span> str[]) {
+    <span class="tp">int</span> len = <span class="fn">strlen</span>(str);
+    <span class="kw">for</span> (<span class="tp">int</span> i = len - <span class="str">1</span>; i &gt;= <span class="str">0</span>; i--)
+        <span class="fn">printf</span>(<span class="str">"%c"</span>, str[i]);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[<span class="str">50</span>] = <span class="str">"Hello"</span>;
+    <span class="tp">int</span> choice;
+
+    <span class="fn">printf</span>(<span class="str">"1. Char Addresses  2. Concatenate  3. Compare  4. Convert Case  5. Count Vowels  6. Reverse\n"</span>);
+    <span class="fn">printf</span>(<span class="str">"Enter choice: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;choice);
+
+    <span class="kw">switch</span> (choice) {
+        <span class="kw">case</span> <span class="str">1</span>: <span class="fn">showAddresses</span>(str); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">2</span>: {
+            <span class="tp">char</span> s2[] = <span class="str">" World"</span>;
+            <span class="fn">concatWithoutStrcat</span>(str, s2);
+            <span class="kw">break</span>;
+        }
+        <span class="kw">case</span> <span class="str">3</span>: {
+            <span class="tp">char</span> s2[] = <span class="str">"Hero"</span>;
+            <span class="fn">compareStrings</span>(str, s2);
+            <span class="kw">break</span>;
+        }
+        <span class="kw">case</span> <span class="str">4</span>: <span class="fn">convertCase</span>(str); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">5</span>: <span class="fn">countVowels</span>(str); <span class="kw">break</span>;
+        <span class="kw">case</span> <span class="str">6</span>: <span class="fn">printf</span>(<span class="str">"Reversed: "</span>); <span class="fn">reverseString</span>(str); <span class="kw">break</span>;
+        <span class="kw">default</span>: <span class="fn">printf</span>(<span class="str">"Invalid choice\n"</span>);
+    }
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">1. Char Addresses  2. Concatenate  3. Compare  4. Convert Case  5. Count Vowels  6. Reverse
+Enter choice: <span class="in">6</span>
+Reversed: olleH</pre>
+    </div></div>
+  </div>
+
+  <footer>&lt;/&gt; try each one before revealing the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

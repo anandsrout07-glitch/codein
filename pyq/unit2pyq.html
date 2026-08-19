@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 2 PYQs — Decision Control, Loops &amp; Arrays</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --green-soft: #7fd68a26;
+    --blue: #6fb3e0;
+    --blue-soft: #6fb3e026;
+    --purple: #b18cd9;
+    --purple-soft: #b18cd926;
+    --red: #e07f7f;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header{
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  header p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .legend span{
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .tag{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    border-radius: 5px;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .tag-mcq{ color: var(--blue); background: var(--blue-soft); }
+  .tag-vsq{ color: var(--green); background: var(--green-soft); }
+  .tag-sq{  color: var(--accent); background: var(--accent-soft); }
+  .tag-lq{  color: var(--purple); background: var(--purple-soft); }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 22px;
+  }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-body{ flex: 1; min-width: 0; }
+
+  .q-tags{ display: flex; gap: 8px; margin-bottom: 8px; }
+
+  .q-text{
+    font-size: 15.5px;
+    color: var(--text);
+  }
+
+  .q-text b{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .options{
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .options li{
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .q-footer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 22px 20px;
+  }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+
+  .show-btn.is-open{
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+
+  .answer.open{
+    grid-template-rows: 1fr;
+  }
+
+  .answer-inner{
+    overflow: hidden;
+  }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .answer-text{
+    margin: 0;
+    padding: 16px 22px 20px;
+    font-size: 14.5px;
+    color: var(--text);
+  }
+
+  .answer-text p{ margin: 0 0 10px; }
+  .answer-text p:last-child{ margin-bottom: 0; }
+  .answer-text ul{ margin: 8px 0 10px; padding-left: 20px; }
+  .answer-text li{ margin-bottom: 6px; }
+
+  .note{
+    font-size: 13px;
+    color: var(--muted);
+    padding: 12px 22px 0;
+    font-style: italic;
+  }
+
+  .correct-opt{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--green);
+    background: var(--green-soft);
+    border: 1px solid #7fd68a55;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 16px 22px 0;
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+  }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Unit 2 — Previous Year Questions</p>
+    <h1>Decision Control, Loops &amp; Arrays</h1>
+    <p>Branching (IF, Switch), Loops (FOR, WHILE, GOTO), break/continue, 1D/2D Arrays, Strings, and Array Limitations.</p>
+    <div class="legend">
+      <span class="tag-mcq" style="background:var(--blue-soft);color:var(--blue);">MCQ</span>
+      <span class="tag-vsq" style="background:var(--green-soft);color:var(--green);">VSQ</span>
+      <span class="tag-sq" style="background:var(--accent-soft);color:var(--accent);">SQ</span>
+      <span class="tag-lq" style="background:var(--purple-soft);color:var(--purple);">LQ</span>
+    </div>
+  </header>
+
+  <!-- Q1 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q1</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following keywords is used to jump the control from one line to another?</span>
+        <ul class="options">
+          <li>(a) for</li>
+          <li>(b) goto</li>
+          <li>(c) jump</li>
+          <li>(d) if</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a1">Show Answer</button>
+    </div>
+    <div class="answer" id="a1">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (b) goto</div>
+        <div class="answer-text">
+          <p><code>goto</code> is C's unconditional jump keyword — it transfers control directly to a labeled statement elsewhere in the same function. <code>for</code> is a loop construct, <code>if</code> is a branching construct, and <code>jump</code> is not a C keyword at all.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q2</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following is a valid way of declaring a 2D array in C?</span>
+        <ul class="options">
+          <li>(a) int A[];</li>
+          <li>(b) int A;</li>
+          <li>(c) int A;</li>
+          <li>(d) int A[];</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a2">Show Answer</button>
+    </div>
+    <div class="answer" id="a2">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct form: int A[rows][cols]; — e.g. int A[2][3];</div>
+        <div class="answer-text">
+          <p>A valid 2D array declaration must specify two dimensions in square brackets, e.g. <code>int A[2][3];</code>. A plain <code>int A;</code> declares a single integer (not an array at all), and <code>int A[];</code> with empty brackets is only valid as a function parameter or when immediately initialized — it doesn't declare a usable 2D array either way.</p>
+        </div>
+        <p class="note">Note: the row's option text appears to have lost its subscript numbers in copying (options (a)/(d) and (b)/(c) show as duplicates) — the answer above reflects the correct C syntax regardless of exact wording in the original paper.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q3</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">Declare and initialize a 2×3 array.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a3">Show Answer</button>
+    </div>
+    <div class="answer" id="a3">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <pre class="code-block"><code><span class="tp">int</span> A[<span class="str">2</span>][<span class="str">3</span>] = {
+    {<span class="str">1</span>, <span class="str">2</span>, <span class="str">3</span>},
+    {<span class="str">4</span>, <span class="str">5</span>, <span class="str">6</span>}
+};</code></pre>
+        <div class="answer-text">
+          <p>This declares a 2D array named <code>A</code> with 2 rows and 3 columns, initialized row by row. <code>A[0][0]</code> is 1 and <code>A[1][2]</code> is 6.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q4</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Write a program to check whether a character is a vowel or a consonant.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a4">Show Answer</button>
+    </div>
+    <div class="answer" id="a4">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Check vowel or consonant</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> ch;
+
+    <span class="fn">printf</span>(<span class="str">"Enter a letter: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%c"</span>, &amp;ch);
+
+    <span class="kw">if</span> (ch==<span class="str">'a'</span>||ch==<span class="str">'e'</span>||ch==<span class="str">'i'</span>||ch==<span class="str">'o'</span>||ch==<span class="str">'u'</span>||
+        ch==<span class="str">'A'</span>||ch==<span class="str">'E'</span>||ch==<span class="str">'I'</span>||ch==<span class="str">'O'</span>||ch==<span class="str">'U'</span>)
+        <span class="fn">printf</span>(<span class="str">"%c is a vowel\n"</span>, ch);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%c is a consonant\n"</span>, ch);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: e)</div>
+        <pre class="output-block">Enter a letter: e
+e is a vowel</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q5</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Write any five limitations of an array.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a5">Show Answer</button>
+    </div>
+    <div class="answer" id="a5">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><b>Fixed size:</b> the size must be known and set at declaration; it cannot grow or shrink at run time.</li>
+            <li><b>Memory wastage:</b> if fewer elements are used than declared, the unused space is wasted.</li>
+            <li><b>Homogeneous data only:</b> all elements must be of the same data type.</li>
+            <li><b>Costly insertion/deletion:</b> inserting or deleting an element (except at the end) requires shifting many other elements.</li>
+            <li><b>No built-in bounds checking:</b> C does not automatically prevent out-of-range access, which can cause undefined behavior.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q6</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Write a program to compute the sum of the first n terms of the series: S = 1 + 1/2 + 1/3 + 1/4 + …</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a6">Show Answer</button>
+    </div>
+    <div class="answer" id="a6">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Sum of series 1 + 1/2 + 1/3 + ... + 1/n</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, i;
+    <span class="tp">double</span> sum = <span class="str">0.0</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Enter n: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= n; i++)
+        sum += <span class="str">1.0</span> / i;
+
+    <span class="fn">printf</span>(<span class="str">"Sum = %.4f\n"</span>, sum);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: n=4)</div>
+        <pre class="output-block">Enter n: 4
+Sum = 2.0833</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q7</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Write a C program to accept a number and check whether it is a SUPERSPY (Spy) number or not.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a7">Show Answer</button>
+    </div>
+    <div class="answer" id="a7">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Spy number: sum of digits equals product of digits</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, digit, sum = <span class="str">0</span>, product = <span class="str">1</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Enter a number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+
+    <span class="kw">while</span> (n &gt; <span class="str">0</span>) {
+        digit = n % <span class="str">10</span>;
+        sum += digit;
+        product *= digit;
+        n /= <span class="str">10</span>;
+    }
+
+    <span class="kw">if</span> (sum == product)
+        <span class="fn">printf</span>(<span class="str">"It is a Spy number\n"</span>);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"It is not a Spy number\n"</span>);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: 1124)</div>
+        <pre class="output-block">Enter a number: 1124
+It is a Spy number</pre>
+        <p class="note">Note: a "Spy number" is one whose digits sum to the same value as their product (e.g. 1+1+2+4 = 1×1×2×4 = 8). This matches the term "SUPERSPY" as commonly used in this exercise.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q8</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ</span></div>
+        <span class="q-text">What do you mean by a multi-dimensional array? Write a program to find the sum of the elements of each individual row of a 4×5 matrix.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a8">Show Answer</button>
+    </div>
+    <div class="answer" id="a8">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A <b>multi-dimensional array</b> is an array of arrays — data organized using two or more indices, such as rows and columns (2D) or higher (3D and beyond). A 2D array like <code>int A[4][5]</code> stores 4 rows of 5 elements each and is commonly used to represent matrices, tables, or grids.</p>
+        </div>
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Sum of each row of a 4x5 matrix</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> A[<span class="str">4</span>][<span class="str">5</span>], i, j, rowSum;
+
+    <span class="fn">printf</span>(<span class="str">"Enter 20 elements (4x5 matrix):\n"</span>);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">4</span>; i++)
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; <span class="str">5</span>; j++)
+            <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;A[i][j]);
+
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">4</span>; i++) {
+        rowSum = <span class="str">0</span>;
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; <span class="str">5</span>; j++)
+            rowSum += A[i][j];
+        <span class="fn">printf</span>(<span class="str">"Sum of row %d = %d\n"</span>, i, rowSum);
+    }
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: rows of 1-5, 6-10, 11-15, 16-20)</div>
+        <pre class="output-block">Sum of row 0 = 15
+Sum of row 1 = 40
+Sum of row 2 = 65
+Sum of row 3 = 90</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q9</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (c)</span></div>
+        <span class="q-text">What is the default case in a switch statement?</span>
+        <ul class="options">
+          <li>(i) Executes when no other cases match</li>
+          <li>(ii) Executes when the first case matches</li>
+          <li>(iii) Executes only if explicitly called</li>
+          <li>(iv) Always executes</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a9">Show Answer</button>
+    </div>
+    <div class="answer" id="a9">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (i) Executes when no other cases match</div>
+        <div class="answer-text">
+          <p>The <code>default</code> block in a <code>switch</code> statement is a fallback that runs only if none of the preceding <code>case</code> labels match the switch expression's value. It is optional and, if present, is typically placed last.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q10</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (d)</span></div>
+        <span class="q-text">How many times will the loop execute? <code>for (int i = 0; i &lt; 5; i++) printf("%d", i);</code></span>
+        <ul class="options">
+          <li>(i) 4</li>
+          <li>(ii) 6</li>
+          <li>(iii) 5</li>
+          <li>(iv) Infinite</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a10">Show Answer</button>
+    </div>
+    <div class="answer" id="a10">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (iii) 5</div>
+        <div class="answer-text">
+          <p><code>i</code> starts at 0 and the loop runs while <code>i &lt; 5</code>, so it executes for <code>i = 0, 1, 2, 3, 4</code> — five iterations in total, printing <code>01234</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q11</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (d)</span></div>
+        <span class="q-text">Describe the syntax and use of the if-else-if ladder with an example.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a11">Show Answer</button>
+    </div>
+    <div class="answer" id="a11">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>The if-else-if ladder tests a series of conditions in order and executes the block for the first true condition, falling back to a final <code>else</code> if none match. It's used when there are multiple, mutually exclusive conditions to check.</p>
+        </div>
+        <pre class="code-block"><code><span class="tp">int</span> marks = <span class="str">75</span>;
+
+<span class="kw">if</span> (marks &gt;= <span class="str">90</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade A\n"</span>);
+<span class="kw">else if</span> (marks &gt;= <span class="str">75</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade B\n"</span>);
+<span class="kw">else if</span> (marks &gt;= <span class="str">60</span>)
+    <span class="fn">printf</span>(<span class="str">"Grade C\n"</span>);
+<span class="kw">else</span>
+    <span class="fn">printf</span>(<span class="str">"Grade D\n"</span>);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q12</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (e)</span></div>
+        <span class="q-text">Explain two differences between while and do-while loops with examples.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a12">Show Answer</button>
+    </div>
+    <div class="answer" id="a12">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><b>Condition check timing:</b> <code>while</code> checks the condition <i>before</i> executing the body (entry-controlled), while <code>do-while</code> checks it <i>after</i> executing the body once (exit-controlled).</li>
+            <li><b>Minimum executions:</b> a <code>while</code> loop's body may run zero times if the condition is false initially; a <code>do-while</code> loop's body always runs at least once, regardless of the condition.</li>
+          </ul>
+        </div>
+        <pre class="code-block"><code><span class="cm">// while: condition checked first</span>
+<span class="tp">int</span> i = <span class="str">10</span>;
+<span class="kw">while</span> (i &lt; <span class="str">5</span>) {
+    <span class="fn">printf</span>(<span class="str">"%d\n"</span>, i);   <span class="cm">// never runs</span>
+}
+
+<span class="cm">// do-while: body runs at least once</span>
+<span class="tp">int</span> j = <span class="str">10</span>;
+<span class="kw">do</span> {
+    <span class="fn">printf</span>(<span class="str">"%d\n"</span>, j);   <span class="cm">// runs once, prints 10</span>
+} <span class="kw">while</span> (j &lt; <span class="str">5</span>);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q13</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (c)</span></div>
+        <span class="q-text">Create a C program to check whether an entered number is Palindrome or not.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a13">Show Answer</button>
+    </div>
+    <div class="answer" id="a13">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Check if a number is a palindrome</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, original, reversed = <span class="str">0</span>, digit;
+
+    <span class="fn">printf</span>(<span class="str">"Enter a number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+    original = n;
+
+    <span class="kw">while</span> (n &gt; <span class="str">0</span>) {
+        digit = n % <span class="str">10</span>;
+        reversed = reversed * <span class="str">10</span> + digit;
+        n /= <span class="str">10</span>;
+    }
+
+    <span class="kw">if</span> (original == reversed)
+        <span class="fn">printf</span>(<span class="str">"%d is a palindrome\n"</span>, original);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is not a palindrome\n"</span>, original);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: 121)</div>
+        <pre class="output-block">Enter a number: 121
+121 is a palindrome</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q14</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (d)</span></div>
+        <span class="q-text">What is the difference between break, continue, and goto statements? Discuss their usage with examples.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a14">Show Answer</button>
+    </div>
+    <div class="answer" id="a14">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><b>break:</b> immediately terminates the nearest enclosing loop or <code>switch</code> statement, and execution continues after it.</li>
+            <li><b>continue:</b> skips the rest of the current loop iteration and jumps to the loop's next condition check/update, without exiting the loop entirely.</li>
+            <li><b>goto:</b> transfers control unconditionally to a labeled statement anywhere within the same function, regardless of loop or block structure — generally discouraged as it can make code harder to follow.</li>
+          </ul>
+        </div>
+        <pre class="code-block"><code><span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">1</span>; i &lt;= <span class="str">5</span>; i++) {
+    <span class="kw">if</span> (i == <span class="str">3</span>) <span class="kw">continue</span>;   <span class="cm">// skip 3</span>
+    <span class="kw">if</span> (i == <span class="str">5</span>) <span class="kw">break</span>;      <span class="cm">// stop before 5</span>
+    <span class="fn">printf</span>(<span class="str">"%d "</span>, i);        <span class="cm">// prints: 1 2 4</span>
+}
+
+<span class="kw">goto</span> end;
+<span class="fn">printf</span>(<span class="str">"skipped\n"</span>);
+end:
+    <span class="fn">printf</span>(<span class="str">"jumped here\n"</span>);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q15</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (e)</span></div>
+        <span class="q-text">Explain the concept of arrays in C. Discuss the difference between single-dimensional and multi-dimensional arrays.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a15">Show Answer</button>
+    </div>
+    <div class="answer" id="a15">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>An array is a collection of elements of the same data type stored in contiguous memory locations, accessed using a common name and an index. Arrays let a program store and process many related values (like a list of scores) using a single variable name instead of many separate variables.</p>
+          <p><b>Single-dimensional (1D) arrays</b> hold a linear list of values, accessed with one index — e.g. <code>int marks[5];</code>, accessed as <code>marks[2]</code>.</p>
+          <p><b>Multi-dimensional arrays</b> hold data arranged across two or more indices, such as rows and columns (2D) — e.g. <code>int A[3][4];</code>, accessed as <code>A[1][2]</code>. They are used to represent structures like matrices, tables, and grids that a single index cannot conveniently model.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q16</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (f)</span></div>
+        <span class="q-text">Write a program in C to find the factorial of a number using a for loop.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a16">Show Answer</button>
+    </div>
+    <div class="answer" id="a16">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Factorial using a for loop</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n, i;
+    <span class="tp">long</span> <span class="tp">long</span> fact = <span class="str">1</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Enter a number: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;n);
+
+    <span class="kw">for</span> (i = <span class="str">1</span>; i &lt;= n; i++)
+        fact *= i;
+
+    <span class="fn">printf</span>(<span class="str">"Factorial of %d = %lld\n"</span>, n, fact);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: 5)</div>
+        <pre class="output-block">Enter a number: 5
+Factorial of 5 = 120</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q17</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ (b)</span></div>
+        <span class="q-text">Describe the limitations of arrays in C programming. Implement a program in C to multiply two matrices using multi-dimensional arrays.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a17">Show Answer</button>
+    </div>
+    <div class="answer" id="a17">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li>Fixed, static size — must be known at compile time and cannot be resized at run time.</li>
+            <li>Can store only homogeneous data (all elements of the same type).</li>
+            <li>Inserting or deleting elements is expensive since it requires shifting existing elements.</li>
+            <li>No automatic bounds checking, which can lead to out-of-range access errors.</li>
+            <li>Memory can be wasted if the declared size exceeds the actual data stored.</li>
+          </ul>
+        </div>
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Multiply two matrices (2x2 example, generalizes to any compatible size)</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> A[<span class="str">2</span>][<span class="str">2</span>], B[<span class="str">2</span>][<span class="str">2</span>], C[<span class="str">2</span>][<span class="str">2</span>];
+    <span class="tp">int</span> i, j, k;
+
+    <span class="fn">printf</span>(<span class="str">"Enter elements of matrix A (2x2):\n"</span>);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">2</span>; i++)
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; <span class="str">2</span>; j++)
+            <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;A[i][j]);
+
+    <span class="fn">printf</span>(<span class="str">"Enter elements of matrix B (2x2):\n"</span>);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">2</span>; i++)
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; <span class="str">2</span>; j++)
+            <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;B[i][j]);
+
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">2</span>; i++) {
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; <span class="str">2</span>; j++) {
+            C[i][j] = <span class="str">0</span>;
+            <span class="kw">for</span> (k = <span class="str">0</span>; k &lt; <span class="str">2</span>; k++)
+                C[i][j] += A[i][k] * B[k][j];
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Product matrix:\n"</span>);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">2</span>; i++) {
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; <span class="str">2</span>; j++)
+            <span class="fn">printf</span>(<span class="str">"%d "</span>, C[i][j]);
+        <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    }
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: A={{1,2},{3,4}}, B={{5,6},{7,8}})</div>
+        <pre class="output-block">Product matrix:
+19 22
+43 50</pre>
+      </div>
+    </div>
+  </div>
+
+  <footer>&lt;/&gt; tap a question type tag to know what's expected — then reveal the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 4 PYQs — Structure, Union, Files &amp; Command Line Arguments</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --green-soft: #7fd68a26;
+    --blue: #6fb3e0;
+    --blue-soft: #6fb3e026;
+    --purple: #b18cd9;
+    --purple-soft: #b18cd926;
+    --red: #e07f7f;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header{
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  header p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .legend span{
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .tag{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    border-radius: 5px;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .tag-mcq{ color: var(--blue); background: var(--blue-soft); }
+  .tag-vsq{ color: var(--green); background: var(--green-soft); }
+  .tag-sq{  color: var(--accent); background: var(--accent-soft); }
+  .tag-lq{  color: var(--purple); background: var(--purple-soft); }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 22px;
+  }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-body{ flex: 1; min-width: 0; }
+
+  .q-tags{ display: flex; gap: 8px; margin-bottom: 8px; }
+
+  .q-text{
+    font-size: 15.5px;
+    color: var(--text);
+  }
+
+  .q-text b{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .options{
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .options li{
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .q-footer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 22px 20px;
+  }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+
+  .show-btn.is-open{
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+
+  .answer.open{
+    grid-template-rows: 1fr;
+  }
+
+  .answer-inner{
+    overflow: hidden;
+  }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .answer-text{
+    margin: 0;
+    padding: 16px 22px 20px;
+    font-size: 14.5px;
+    color: var(--text);
+  }
+
+  .answer-text p{ margin: 0 0 10px; }
+  .answer-text p:last-child{ margin-bottom: 0; }
+  .answer-text ul{ margin: 8px 0 10px; padding-left: 20px; }
+  .answer-text li{ margin-bottom: 6px; }
+
+  .answer-text table{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 13.5px;
+  }
+
+  .answer-text th, .answer-text td{
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    text-align: left;
+  }
+
+  .answer-text th{
+    background: #1e222a;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .answer-text td code{ color: var(--accent); }
+
+  .correct-opt{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--green);
+    background: var(--green-soft);
+    border: 1px solid #7fd68a55;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 16px 22px 0;
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+  }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Unit 4 — Previous Year Questions</p>
+    <h1>Structure, Union, Files &amp; Command Line Arguments</h1>
+    <p>Structure/Union definitions, access, nested structures, Arrays of Structures, File Management (opening modes), and Command Line Arguments.</p>
+    <div class="legend">
+      <span class="tag-mcq" style="background:var(--blue-soft);color:var(--blue);">MCQ</span>
+      <span class="tag-vsq" style="background:var(--green-soft);color:var(--green);">VSQ</span>
+      <span class="tag-sq" style="background:var(--accent-soft);color:var(--accent);">SQ</span>
+      <span class="tag-lq" style="background:var(--purple-soft);color:var(--purple);">LQ</span>
+    </div>
+  </header>
+
+  <!-- Q1 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q1</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which operator is used to access a member of a structure using a structure pointer?</span>
+        <ul class="options">
+          <li>(a) .</li>
+          <li>(b) &gt;</li>
+          <li>(c) -&gt;</li>
+          <li>(d) =&gt;</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a1">Show Answer</button>
+    </div>
+    <div class="answer" id="a1">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (c) -&gt;</div>
+        <div class="answer-text">
+          <p>The arrow operator <code>-&gt;</code> is used to access a structure member through a pointer to that structure, e.g. <code>ptr-&gt;balance</code>. The dot operator <code>.</code> is used only when accessing a member directly on a structure variable (not a pointer).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q2</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following statements is CORRECT?</span>
+        <ul class="options">
+          <li>(a) Structure and union are the same</li>
+          <li>(b) A structure cannot reference itself</li>
+          <li>(c) An array of structures is not possible</li>
+          <li>(d) A structure can be passed to a function as an argument</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a2">Show Answer</button>
+    </div>
+    <div class="answer" id="a2">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (d) A structure can be passed to a function as an argument</div>
+        <div class="answer-text">
+          <p>Structures can be passed to functions by value or by reference (pointer), just like other data types. The other statements are false: structures and unions differ in memory layout (structures allocate space for every member, unions share one space); a structure <i>can</i> reference itself indirectly via a pointer (self-referential structure); and arrays of structures are commonly used (e.g. <code>struct Student list[50];</code>).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q3</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following statements is INCORRECT?</span>
+        <ul class="options">
+          <li>(a) Unary operator takes only one operand</li>
+          <li>(b) A string is an array of characters</li>
+          <li>(c) malloc() function is used for dynamic memory allocation</li>
+          <li>(d) The data members of a structure must be of the same data type</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a3">Show Answer</button>
+    </div>
+    <div class="answer" id="a3">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (d) The data members of a structure must be of the same data type</div>
+        <div class="answer-text">
+          <p>This is false — a key feature of structures is that they can group members of <i>different</i> data types together (e.g. an <code>int</code>, a <code>char</code> array, and a <code>float</code> in the same structure). Statements (a), (b), and (c) are all true.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q4</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">What is a command-line argument?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a4">Show Answer</button>
+    </div>
+    <div class="answer" id="a4">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A command-line argument is a value passed to a C program at the time it is executed from the command line, rather than entered interactively while the program runs. These arguments are received by <code>main()</code> through the parameters <code>int argc</code> (argument count) and <code>char *argv[]</code> (argument values, as strings), e.g. running <code>./program hello 5</code> passes <code>"hello"</code> and <code>"5"</code> as arguments.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q5</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">When should we use a union instead of a structure?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a5">Show Answer</button>
+    </div>
+    <div class="answer" id="a5">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A union should be used when only one of several possible members needs to be stored and accessed <i>at a time</i>, and memory is a concern — all members of a union share the same memory location, so its size equals that of its largest member rather than the sum of all members. This is useful for representing variant data (e.g. a value that could be an <code>int</code>, <code>float</code>, or <code>char</code> depending on context) without wasting memory on unused fields, unlike a structure which allocates separate space for every member.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q6</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Create a structure named Account with data members account_number, account_name, account_type, and balance. Initialize it in main().</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a6">Show Answer</button>
+    </div>
+    <div class="answer" id="a6">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Account structure</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="kw">struct</span> Account {
+    <span class="tp">int</span> account_number;
+    <span class="tp">char</span> account_name[<span class="str">50</span>];
+    <span class="tp">char</span> account_type[<span class="str">20</span>];
+    <span class="tp">float</span> balance;
+};
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="kw">struct</span> Account acc = {<span class="str">10234</span>, <span class="str">"Rahul Sharma"</span>, <span class="str">"Savings"</span>, <span class="str">25000.50</span>};
+
+    <span class="fn">printf</span>(<span class="str">"Account Number: %d\n"</span>, acc.account_number);
+    <span class="fn">printf</span>(<span class="str">"Account Name: %s\n"</span>, acc.account_name);
+    <span class="fn">printf</span>(<span class="str">"Account Type: %s\n"</span>, acc.account_type);
+    <span class="fn">printf</span>(<span class="str">"Balance: %.2f\n"</span>, acc.balance);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Account Number: 10234
+Account Name: Rahul Sharma
+Account Type: Savings
+Balance: 25000.50</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q7</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ</span></div>
+        <span class="q-text">Explain various file opening modes in C with examples.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a7">Show Answer</button>
+    </div>
+    <div class="answer" id="a7">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>File modes are specified as the second argument to <code>fopen()</code> and control how the file is accessed:</p>
+          <table>
+            <tr><th>Mode</th><th>Meaning</th></tr>
+            <tr><td><code>"r"</code></td><td>Open an existing file for reading only; fails if the file doesn't exist.</td></tr>
+            <tr><td><code>"w"</code></td><td>Open for writing; creates a new file, or truncates (erases) an existing one.</td></tr>
+            <tr><td><code>"a"</code></td><td>Open for appending; creates the file if it doesn't exist, writes are added at the end.</td></tr>
+            <tr><td><code>"r+"</code></td><td>Open an existing file for both reading and writing.</td></tr>
+            <tr><td><code>"w+"</code></td><td>Open for reading and writing; creates a new file or truncates an existing one.</td></tr>
+            <tr><td><code>"a+"</code></td><td>Open for reading and appending; creates the file if needed.</td></tr>
+            <tr><td><code>"rb"/"wb"/"ab"</code></td><td>Same as above but in binary mode instead of text mode.</td></tr>
+          </table>
+        </div>
+        <pre class="code-block"><code><span class="tp">FILE</span> *fp = <span class="fn">fopen</span>(<span class="str">"data.txt"</span>, <span class="str">"w"</span>);
+<span class="kw">if</span> (fp != <span class="tp">NULL</span>) {
+    <span class="fn">fprintf</span>(fp, <span class="str">"Hello, file!\n"</span>);
+    <span class="fn">fclose</span>(fp);
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q8</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (g)</span></div>
+        <span class="q-text">What is the difference between a structure and a union?</span>
+        <ul class="options">
+          <li>(i) Structures share memory; unions do not</li>
+          <li>(ii) Unions share memory; structures do not</li>
+          <li>(iii) Both share memory</li>
+          <li>(iv) None of the above</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a8">Show Answer</button>
+    </div>
+    <div class="answer" id="a8">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (ii) Unions share memory; structures do not</div>
+        <div class="answer-text">
+          <p>All members of a <code>union</code> occupy the <i>same</i> memory location (so the union's size equals that of its largest member), meaning only one member holds a valid value at a time. A <code>struct</code> allocates separate memory for each member, so the total size is roughly the sum of all its members' sizes.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q9</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (i)</span></div>
+        <span class="q-text">What is a self-referential structure? Provide an example use case.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a9">Show Answer</button>
+    </div>
+    <div class="answer" id="a9">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <pre class="code-block"><code><span class="kw">struct</span> Node {
+    <span class="tp">int</span> data;
+    <span class="kw">struct</span> Node *next;  <span class="cm">// pointer to another Node</span>
+};</code></pre>
+        <div class="answer-text">
+          <p>A <b>self-referential structure</b> is a structure that contains a pointer to another instance of the same structure type. A structure cannot directly contain a member of its own type (that would require infinite memory), but it can hold a <i>pointer</i> to one, since a pointer has a fixed, known size.</p>
+          <p>This is the foundation for building dynamic linked data structures such as linked lists, stacks, queues, and trees, where each node needs to reference the next (or child) node.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q10</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (i)</span></div>
+        <span class="q-text">Explain the modes of opening a file (r, w, a, etc.) in C with example.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a10">Show Answer</button>
+    </div>
+    <div class="answer" id="a10">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><code>"r"</code> — read only; the file must already exist.</li>
+            <li><code>"w"</code> — write only; creates a new file or erases the contents of an existing one.</li>
+            <li><code>"a"</code> — append; writes are added to the end of the file, creating it if it doesn't exist.</li>
+            <li><code>"r+"</code>, <code>"w+"</code>, <code>"a+"</code> — the "+" variants allow both reading and writing, differing in whether the file must exist and whether it's truncated.</li>
+          </ul>
+        </div>
+        <pre class="code-block"><code><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">FILE</span> *fp = <span class="fn">fopen</span>(<span class="str">"notes.txt"</span>, <span class="str">"a"</span>);  <span class="cm">// append mode</span>
+    <span class="kw">if</span> (fp == <span class="tp">NULL</span>) {
+        <span class="fn">printf</span>(<span class="str">"Error opening file\n"</span>);
+        <span class="kw">return</span> <span class="str">1</span>;
+    }
+    <span class="fn">fprintf</span>(fp, <span class="str">"New entry added.\n"</span>);
+    <span class="fn">fclose</span>(fp);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q11</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (j)</span></div>
+        <span class="q-text">Explain command-line arguments in C. How are they useful in program execution?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a11">Show Answer</button>
+    </div>
+    <div class="answer" id="a11">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>Command-line arguments let a user supply input to a C program at the moment it is launched, via the terminal, instead of the program prompting for input interactively. They are received through two special parameters of <code>main()</code>: <code>argc</code> (the count of arguments, including the program name) and <code>argv[]</code> (an array of strings holding each argument, with <code>argv[0]</code> being the program's name).</p>
+          <p>They are useful for automating and scripting program execution — e.g. specifying an input filename, a mode flag, or configuration values directly when running the program (<code>./sort data.txt -desc</code>) without needing interactive prompts.</p>
+        </div>
+        <pre class="code-block"><code><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>(<span class="tp">int</span> argc, <span class="tp">char</span> *argv[]) {
+    <span class="tp">int</span> i;
+    <span class="fn">printf</span>(<span class="str">"Number of arguments: %d\n"</span>, argc);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; argc; i++)
+        <span class="fn">printf</span>(<span class="str">"argv[%d] = %s\n"</span>, i, argv[i]);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q12</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ (d)</span></div>
+        <span class="q-text">Write a program in C to define a structure for a student (with information Roll no, Date of birth, Mark) and display the details of five students. Use nested structures to store a date (day, month, year).</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a12">Show Answer</button>
+    </div>
+    <div class="answer" id="a12">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Student records with a nested Date structure</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="kw">struct</span> Date {
+    <span class="tp">int</span> day, month, year;
+};
+
+<span class="kw">struct</span> Student {
+    <span class="tp">int</span> rollNo;
+    <span class="kw">struct</span> Date dob;   <span class="cm">// nested structure</span>
+    <span class="tp">float</span> marks;
+};
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="kw">struct</span> Student students[<span class="str">5</span>] = {
+        {<span class="str">1</span>, {<span class="str">12</span>, <span class="str">5</span>, <span class="str">2004</span>}, <span class="str">88.5</span>},
+        {<span class="str">2</span>, {<span class="str">23</span>, <span class="str">8</span>, <span class="str">2003</span>}, <span class="str">76.0</span>},
+        {<span class="str">3</span>, {<span class="str">4</span>, <span class="str">11</span>, <span class="str">2004</span>}, <span class="str">92.3</span>},
+        {<span class="str">4</span>, {<span class="str">30</span>, <span class="str">1</span>, <span class="str">2005</span>}, <span class="str">64.8</span>},
+        {<span class="str">5</span>, {<span class="str">17</span>, <span class="str">7</span>, <span class="str">2003</span>}, <span class="str">81.1</span>}
+    };
+    <span class="tp">int</span> i;
+
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; <span class="str">5</span>; i++) {
+        <span class="fn">printf</span>(<span class="str">"Roll No: %d | DOB: %02d-%02d-%d | Marks: %.1f\n"</span>,
+               students[i].rollNo,
+               students[i].dob.day, students[i].dob.month, students[i].dob.year,
+               students[i].marks);
+    }
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Roll No: 1 | DOB: 12-05-2004 | Marks: 88.5
+Roll No: 2 | DOB: 23-08-2003 | Marks: 76.0
+Roll No: 3 | DOB: 04-11-2004 | Marks: 92.3
+Roll No: 4 | DOB: 30-01-2005 | Marks: 64.8
+Roll No: 5 | DOB: 17-07-2003 | Marks: 81.1</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q13</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ (e)</span></div>
+        <span class="q-text">What is a file pointer? How is it used to manage file operations in C? Illustrate with an example program to read and write data to a file.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a13">Show Answer</button>
+    </div>
+    <div class="answer" id="a13">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A <b>file pointer</b> is a pointer of type <code>FILE *</code> (defined in <code>stdio.h</code>) that holds information about an opened file — such as its current read/write position, buffering, and error status. It is obtained by calling <code>fopen()</code> and is passed to nearly every file-handling function (<code>fprintf</code>, <code>fscanf</code>, <code>fread</code>, <code>fwrite</code>, <code>fclose</code>, etc.) so they know which file to operate on. When file operations are finished, <code>fclose()</code> releases the file pointer and flushes any buffered data to disk.</p>
+        </div>
+        <pre class="code-block"><code><span class="cm">// Write to a file, then read it back</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">FILE</span> *fp;
+    <span class="tp">char</span> line[<span class="str">100</span>];
+
+    <span class="cm">// Writing to the file</span>
+    fp = <span class="fn">fopen</span>(<span class="str">"greet.txt"</span>, <span class="str">"w"</span>);
+    <span class="kw">if</span> (fp == <span class="tp">NULL</span>) {
+        <span class="fn">printf</span>(<span class="str">"Could not open file for writing\n"</span>);
+        <span class="kw">return</span> <span class="str">1</span>;
+    }
+    <span class="fn">fprintf</span>(fp, <span class="str">"Hello from C file handling!\n"</span>);
+    <span class="fn">fclose</span>(fp);
+
+    <span class="cm">// Reading the file back</span>
+    fp = <span class="fn">fopen</span>(<span class="str">"greet.txt"</span>, <span class="str">"r"</span>);
+    <span class="kw">if</span> (fp == <span class="tp">NULL</span>) {
+        <span class="fn">printf</span>(<span class="str">"Could not open file for reading\n"</span>);
+        <span class="kw">return</span> <span class="str">1</span>;
+    }
+    <span class="kw">while</span> (<span class="fn">fgets</span>(line, <span class="kw">sizeof</span>(line), fp) != <span class="tp">NULL</span>)
+        <span class="fn">printf</span>(<span class="str">"%s"</span>, line);
+    <span class="fn">fclose</span>(fp);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Hello from C file handling!</pre>
+      </div>
+    </div>
+  </div>
+
+  <footer>&lt;/&gt; tap a question type tag to know what's expected — then reveal the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

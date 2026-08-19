@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Practice — Operators &amp; I/O</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --blue: #6fb3e0;
+    --purple: #b18cd9;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header{
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  header p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 22px;
+  }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-text{
+    font-size: 15.5px;
+    color: var(--text);
+  }
+
+  .q-text b{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .q-footer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 22px 20px;
+  }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+
+  .show-btn.is-open{
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+
+  .answer.open{
+    grid-template-rows: 1fr;
+  }
+
+  .answer-inner{
+    overflow: hidden;
+  }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+  }
+
+  pre.output-block .in{ color: var(--blue); }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">C Fundamentals — Set 02</p>
+    <h1>Operators &amp; I/O Practice</h1>
+    <p>Read each question, work it out, then reveal the answer to check your code and its output.</p>
+  </header>
+
+  <!-- Question 1 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q1</span>
+      <span class="q-text"><b>Swap Two Numbers:</b> Write a program to swap two numbers using a temporary variable.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a1">Show Answer</button>
+    </div>
+    <div class="answer" id="a1">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Swap two numbers using a temporary variable</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">5</span>, b = <span class="str">10</span>, temp;
+
+    temp = a;
+    a = b;
+    b = temp;
+
+    <span class="fn">printf</span>(<span class="str">"a = %d, b = %d\n"</span>, a, b);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">a = 10, b = 5</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 2 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q2</span>
+      <span class="q-text"><b>Basic Input/Output:</b> Write a program to read an integer, a floating-point number, and a character from the user and display them using <code>scanf</code> and <code>printf</code>.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a2">Show Answer</button>
+    </div>
+    <div class="answer" id="a2">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Read and display an int, a float, and a char</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> i;
+    <span class="tp">float</span> f;
+    <span class="tp">char</span> c;
+
+    <span class="fn">printf</span>(<span class="str">"Enter an integer: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;i);
+
+    <span class="fn">printf</span>(<span class="str">"Enter a float: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%f"</span>, &amp;f);
+
+    <span class="fn">printf</span>(<span class="str">"Enter a character: "</span>);
+    <span class="fn">scanf</span>(<span class="str">" %c"</span>, &amp;c);
+
+    <span class="fn">printf</span>(<span class="str">"\nYou entered:\n"</span>);
+    <span class="fn">printf</span>(<span class="str">"Integer: %d\n"</span>, i);
+    <span class="fn">printf</span>(<span class="str">"Float: %.2f\n"</span>, f);
+    <span class="fn">printf</span>(<span class="str">"Character: %c\n"</span>, c);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Enter an integer: <span class="in">25</span>
+Enter a float: <span class="in">3.14</span>
+Enter a character: <span class="in">A</span>
+
+You entered:
+Integer: 25
+Float: 3.14
+Character: A</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 3 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q3</span>
+      <span class="q-text"><b>Arithmetic Operations:</b> Write a program to calculate the sum, difference, product, and quotient of two numbers entered by the user.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a3">Show Answer</button>
+    </div>
+    <div class="answer" id="a3">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Sum, difference, product, quotient of two numbers</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">float</span> a, b;
+
+    <span class="fn">printf</span>(<span class="str">"Enter two numbers: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%f %f"</span>, &amp;a, &amp;b);
+
+    <span class="fn">printf</span>(<span class="str">"Sum: %.2f\n"</span>, a + b);
+    <span class="fn">printf</span>(<span class="str">"Difference: %.2f\n"</span>, a - b);
+    <span class="fn">printf</span>(<span class="str">"Product: %.2f\n"</span>, a * b);
+    <span class="fn">printf</span>(<span class="str">"Quotient: %.2f\n"</span>, a / b);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Enter two numbers: <span class="in">20 4</span>
+Sum: 24.00
+Difference: 16.00
+Product: 80.00
+Quotient: 5.00</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 4 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q4</span>
+      <span class="q-text"><b>Size of Data Types:</b> Write a program to find and display the memory size (in bytes) of <code>int</code>, <code>float</code>, <code>char</code>, and <code>double</code> using the <code>sizeof</code> operator.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a4">Show Answer</button>
+    </div>
+    <div class="answer" id="a4">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Size of int, float, char, and double</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="fn">printf</span>(<span class="str">"Size of int: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="tp">int</span>));
+    <span class="fn">printf</span>(<span class="str">"Size of float: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="tp">float</span>));
+    <span class="fn">printf</span>(<span class="str">"Size of char: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="tp">char</span>));
+    <span class="fn">printf</span>(<span class="str">"Size of double: %zu bytes\n"</span>, <span class="kw">sizeof</span>(<span class="tp">double</span>));
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Size of int: 4 bytes
+Size of float: 4 bytes
+Size of char: 1 bytes
+Size of double: 8 bytes</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 5 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q5</span>
+      <span class="q-text"><b>Compound Assignment:</b> Write a program to demonstrate the use of compound assignment operators (e.g., <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>).</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a5">Show Answer</button>
+    </div>
+    <div class="answer" id="a5">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Compound assignment operators</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">10</span>;
+
+    a += <span class="str">5</span>;
+    <span class="fn">printf</span>(<span class="str">"After a += 5: %d\n"</span>, a);
+
+    a -= <span class="str">3</span>;
+    <span class="fn">printf</span>(<span class="str">"After a -= 3: %d\n"</span>, a);
+
+    a *= <span class="str">2</span>;
+    <span class="fn">printf</span>(<span class="str">"After a *= 2: %d\n"</span>, a);
+
+    a /= <span class="str">4</span>;
+    <span class="fn">printf</span>(<span class="str">"After a /= 4: %d\n"</span>, a);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">After a += 5: 15
+After a -= 3: 12
+After a *= 2: 24
+After a /= 4: 6</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 6 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q6</span>
+      <span class="q-text"><b>Conditional (Ternary) Operator:</b> Write a program to find the maximum of two numbers using the conditional operator <code>(? :)</code>.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a6">Show Answer</button>
+    </div>
+    <div class="answer" id="a6">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Maximum of two numbers using the ternary operator</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">42</span>, b = <span class="str">17</span>, max;
+
+    max = (a &gt; b) ? a : b;
+
+    <span class="fn">printf</span>(<span class="str">"Maximum is: %d\n"</span>, max);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Maximum is: 42</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 7 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q7</span>
+      <span class="q-text"><b>Increment and Decrement:</b> Write a program to demonstrate the difference between prefix and postfix increment (<code>++</code>) and decrement (<code>--</code>) operators.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a7">Show Answer</button>
+    </div>
+    <div class="answer" id="a7">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Prefix vs postfix increment and decrement</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">5</span>;
+
+    <span class="fn">printf</span>(<span class="str">"a++ (postfix) gives: %d\n"</span>, a++);
+    <span class="fn">printf</span>(<span class="str">"a is now: %d\n"</span>, a);
+
+    <span class="fn">printf</span>(<span class="str">"++a (prefix) gives: %d\n"</span>, ++a);
+    <span class="fn">printf</span>(<span class="str">"a is now: %d\n"</span>, a);
+
+    <span class="tp">int</span> b = <span class="str">5</span>;
+
+    <span class="fn">printf</span>(<span class="str">"b-- (postfix) gives: %d\n"</span>, b--);
+    <span class="fn">printf</span>(<span class="str">"--b (prefix) gives: %d\n"</span>, --b);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">a++ (postfix) gives: 5
+a is now: 6
+++a (prefix) gives: 7
+a is now: 7
+b-- (postfix) gives: 5
+--b (prefix) gives: 3</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 8 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q8</span>
+      <span class="q-text"><b>Logical Operators:</b> Write a program that uses logical operators (<code>&amp;&amp;</code>, <code>||</code>, <code>!</code>) to check if a number is both positive and even.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a8">Show Answer</button>
+    </div>
+    <div class="answer" id="a8">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Check if a number is both positive and even</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">14</span>;
+
+    <span class="kw">if</span> (n &gt; <span class="str">0</span> &amp;&amp; n % <span class="str">2</span> == <span class="str">0</span>)
+        <span class="fn">printf</span>(<span class="str">"%d is positive and even\n"</span>, n);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is not positive and even\n"</span>, n);
+
+    <span class="kw">if</span> (!(n &lt; <span class="str">0</span>))
+        <span class="fn">printf</span>(<span class="str">"%d is not negative\n"</span>, n);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">14 is positive and even
+14 is not negative</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 9 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q9</span>
+      <span class="q-text"><b>Bitwise Operations:</b> Write a program to perform Bitwise AND, OR, and XOR operations on two integers.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a9">Show Answer</button>
+    </div>
+    <div class="answer" id="a9">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Bitwise AND, OR, and XOR of two integers</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">12</span>, b = <span class="str">10</span>;
+
+    <span class="fn">printf</span>(<span class="str">"a &amp; b = %d\n"</span>, a &amp; b);
+    <span class="fn">printf</span>(<span class="str">"a | b = %d\n"</span>, a | b);
+    <span class="fn">printf</span>(<span class="str">"a ^ b = %d\n"</span>, a ^ b);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">a & b = 8
+a | b = 14
+a ^ b = 6</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question 10 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q10</span>
+      <span class="q-text"><b>Operator Precedence:</b> Write a program to evaluate a complex expression (e.g., <code>a + b * c / d</code>) and print the result to demonstrate the order of precedence and associativity.</span>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a10">Show Answer</button>
+    </div>
+    <div class="answer" id="a10">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Operator precedence: a + b * c / d</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> a = <span class="str">5</span>, b = <span class="str">4</span>, c = <span class="str">3</span>, d = <span class="str">2</span>, result;
+
+    <span class="cm">// * and / have higher precedence than +, and are left-associative</span>
+    result = a + b * c / d;
+
+    <span class="fn">printf</span>(<span class="str">"a + b * c / d = %d\n"</span>, result);
+    <span class="cm">// Evaluated as: a + ((b * c) / d) = 5 + (12 / 2) = 5 + 6 = 11</span>
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">a + b * c / d = 11</pre>
+      </div>
+    </div>
+  </div>
+
+  <footer>&lt;/&gt; try each one before revealing the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

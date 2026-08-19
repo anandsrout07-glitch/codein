@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C Practice — Pointers, Functions &amp; Strings</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --blue: #6fb3e0;
+    --purple: #b18cd9;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{ max-width: 780px; margin: 0 auto; }
+
+  header{
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{ margin: 0 0 8px; font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+  header p{ margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  .section-title{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 52px 0 20px;
+  }
+  .section-title:first-of-type{ margin-top: 0; }
+
+  .section-title h2{
+    font-size: 15.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    margin: 0;
+    white-space: nowrap;
+  }
+  .section-title .rule{ height: 1px; background: var(--border); flex: 1; }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{ display: flex; align-items: flex-start; gap: 14px; padding: 20px 22px; }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-text{ font-size: 15.5px; color: var(--text); }
+  .q-text b{ color: var(--text); font-weight: 600; }
+
+  .q-footer{ display: flex; justify-content: flex-end; padding: 0 22px 20px; }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+  .show-btn.is-open{ background: transparent; color: var(--muted); border: 1px solid var(--border); }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+  .answer.open{ grid-template-rows: 1fr; }
+  .answer-inner{ overflow: hidden; }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+    white-space: pre-wrap;
+  }
+  pre.output-block .in{ color: var(--blue); }
+  pre.output-block .note{ color: var(--muted); font-style: italic; }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">C Fundamentals — Set 04</p>
+    <h1>Pointers, Functions &amp; Strings</h1>
+    <p>Read each question, work it out, then reveal the answer to check your code and its output.</p>
+  </header>
+
+  <!-- ===================== SECTION: POINTERS, FUNCTIONS & MEMORY ===================== -->
+  <div class="section-title"><h2>Pointers, Functions &amp; Dynamic Memory</h2><div class="rule"></div></div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P1</span>
+      <span class="q-text"><b>Swap with Pointers:</b> Write a program that swaps two numbers using pointers.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p1">Show Answer</button></div>
+    <div class="answer" id="p1"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Swap two numbers using pointers</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">void</span> <span class="fn">swap</span>(<span class="tp">int</span> *a, <span class="tp">int</span> *b) {
+    <span class="tp">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> x = <span class="str">5</span>, y = <span class="str">9</span>;
+
+    <span class="fn">swap</span>(&amp;x, &amp;y);
+
+    <span class="fn">printf</span>(<span class="str">"x = %d, y = %d\n"</span>, x, y);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">x = 9, y = 5</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P2</span>
+      <span class="q-text"><b>Address Passing:</b> Write a program in which a function is passed the address of two variables and then alters its contents.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p2">Show Answer</button></div>
+    <div class="answer" id="p2"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Pass addresses and alter the original variables</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">void</span> <span class="fn">updateValues</span>(<span class="tp">int</span> *a, <span class="tp">int</span> *b) {
+    *a += <span class="str">10</span>;
+    *b *= <span class="str">2</span>;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> x = <span class="str">5</span>, y = <span class="str">8</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Before: x = %d, y = %d\n"</span>, x, y);
+
+    <span class="fn">updateValues</span>(&amp;x, &amp;y);
+
+    <span class="fn">printf</span>(<span class="str">"After:  x = %d, y = %d\n"</span>, x, y);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Before: x = 5, y = 8
+After:  x = 15, y = 16</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P3</span>
+      <span class="q-text"><b>Character Addresses:</b> Write a program to show the memory address of each character in a string.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p3">Show Answer</button></div>
+    <div class="answer" id="p3"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Show the address of each character in a string</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"Cat"</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++)
+        <span class="fn">printf</span>(<span class="str">"Address of '%c': %p\n"</span>, str[i], (<span class="tp">void</span>*)&amp;str[i]);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Address of 'C': 0x7ffd3a2b1a3c
+Address of 'a': 0x7ffd3a2b1a3d
+Address of 't': 0x7ffd3a2b1a3e
+<span class="note">(actual addresses vary between runs and machines — notice each is one byte apart)</span></pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P4</span>
+      <span class="q-text"><b>Pointer String Length:</b> Write a program to calculate the length of a string using pointers.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p4">Show Answer</button></div>
+    <div class="answer" id="p4"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// String length using pointer arithmetic</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">myStrlen</span>(<span class="tp">char</span> *str) {
+    <span class="tp">int</span> len = <span class="str">0</span>;
+    <span class="kw">while</span> (*(str + len) != <span class="str">'\0'</span>)
+        len++;
+    <span class="kw">return</span> len;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"Hello, World!"</span>;
+
+    <span class="fn">printf</span>(<span class="str">"Length of string: %d\n"</span>, <span class="fn">myStrlen</span>(str));
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Length of string: 13</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P5</span>
+      <span class="q-text"><b>Palindrome Function:</b> Write a function that checks whether a given string is a palindrome or not.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p5">Show Answer</button></div>
+    <div class="answer" id="p5"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Check whether a string is a palindrome</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;string.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">isPalindrome</span>(<span class="tp">char</span> str[]) {
+    <span class="tp">int</span> start = <span class="str">0</span>, end = <span class="fn">strlen</span>(str) - <span class="str">1</span>;
+
+    <span class="kw">while</span> (start &lt; end) {
+        <span class="kw">if</span> (str[start] != str[end])
+            <span class="kw">return</span> <span class="str">0</span>;
+        start++;
+        end--;
+    }
+    <span class="kw">return</span> <span class="str">1</span>;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"madam"</span>;
+
+    <span class="kw">if</span> (<span class="fn">isPalindrome</span>(str))
+        <span class="fn">printf</span>(<span class="str">"\"%s\" is a palindrome\n"</span>, str);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"\"%s\" is not a palindrome\n"</span>, str);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">"madam" is a palindrome</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P6</span>
+      <span class="q-text"><b>Prime Generator Function:</b> Write a function to find whether a given number is prime or not. Use the same function to generate the prime numbers less than 100.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p6">Show Answer</button></div>
+    <div class="answer" id="p6"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Prime check function, reused to list primes below 100</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">isPrime</span>(<span class="tp">int</span> n) {
+    <span class="kw">if</span> (n &lt; <span class="str">2</span>) <span class="kw">return</span> <span class="str">0</span>;
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">2</span>; i * i &lt;= n; i++) {
+        <span class="kw">if</span> (n % i == <span class="str">0</span>)
+            <span class="kw">return</span> <span class="str">0</span>;
+    }
+    <span class="kw">return</span> <span class="str">1</span>;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="fn">printf</span>(<span class="str">"Prime numbers less than 100: "</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">2</span>; i &lt; <span class="str">100</span>; i++) {
+        <span class="kw">if</span> (<span class="fn">isPrime</span>(i))
+            <span class="fn">printf</span>(<span class="str">"%d "</span>, i);
+    }
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Prime numbers less than 100: 2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97 </pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P7</span>
+      <span class="q-text"><b>Command Line Arguments:</b> Write a program that prints a table indicating the number of occurrences of each alphabet in text entered as command-line arguments.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p7">Show Answer</button></div>
+    <div class="answer" id="p7"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Letter frequency from command-line arguments</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>(<span class="tp">int</span> argc, <span class="tp">char</span> *argv[]) {
+    <span class="tp">int</span> freq[<span class="str">26</span>] = {<span class="str">0</span>};
+
+    <span class="kw">for</span> (<span class="tp">int</span> a = <span class="str">1</span>; a &lt; argc; a++) {
+        <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; argv[a][i] != <span class="str">'\0'</span>; i++) {
+            <span class="kw">if</span> (<span class="fn">isalpha</span>(argv[a][i])) {
+                <span class="tp">int</span> index = <span class="fn">tolower</span>(argv[a][i]) - <span class="str">'a'</span>;
+                freq[index]++;
+            }
+        }
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Letter  Count\n"</span>);
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; i &lt; <span class="str">26</span>; i++) {
+        <span class="kw">if</span> (freq[i] &gt; <span class="str">0</span>)
+            <span class="fn">printf</span>(<span class="str">"  %c      %d\n"</span>, <span class="str">'a'</span> + i, freq[i]);
+    }
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">$ <span class="in">./a.out Hello World</span>
+Letter  Count
+  d      1
+  e      1
+  h      1
+  l      3
+  o      2
+  r      1
+  w      1</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P8</span>
+      <span class="q-text"><b>Circle Math Function:</b> Write a program that takes the radius of a circle, passes it to another function that computes the area and circumference, and displays the results from <code>main()</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p8">Show Answer</button></div>
+    <div class="answer" id="p8"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Compute area and circumference in a helper function</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#define</span> PI <span class="str">3.14159</span>
+
+<span class="tp">void</span> <span class="fn">circleStats</span>(<span class="tp">float</span> radius, <span class="tp">float</span> *area, <span class="tp">float</span> *circumference) {
+    *area = PI * radius * radius;
+    *circumference = <span class="str">2</span> * PI * radius;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">float</span> radius = <span class="str">5</span>, area, circumference;
+
+    <span class="fn">circleStats</span>(radius, &amp;area, &amp;circumference);
+
+    <span class="fn">printf</span>(<span class="str">"Area: %.2f\n"</span>, area);
+    <span class="fn">printf</span>(<span class="str">"Circumference: %.2f\n"</span>, circumference);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Area: 78.54
+Circumference: 31.42</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">P9</span>
+      <span class="q-text"><b>Dynamic Memory Allocation:</b> Write a program to find the sum and average of n elements using <code>malloc()</code> or <code>calloc()</code>.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="p9">Show Answer</button></div>
+    <div class="answer" id="p9"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Sum and average of n elements using malloc</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> n = <span class="str">5</span>, i;
+    <span class="tp">float</span> sum = <span class="str">0</span>;
+
+    <span class="tp">int</span> *arr = (<span class="tp">int</span>*) <span class="fn">malloc</span>(n * <span class="kw">sizeof</span>(<span class="tp">int</span>));
+    <span class="kw">if</span> (arr == NULL) {
+        <span class="fn">printf</span>(<span class="str">"Memory allocation failed\n"</span>);
+        <span class="kw">return</span> <span class="str">1</span>;
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Enter %d numbers: "</span>, n);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; n; i++)
+        <span class="fn">scanf</span>(<span class="str">"%d"</span>, &amp;arr[i]);
+
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; n; i++)
+        sum += arr[i];
+
+    <span class="fn">printf</span>(<span class="str">"Sum: %.2f\n"</span>, sum);
+    <span class="fn">printf</span>(<span class="str">"Average: %.2f\n"</span>, sum / n);
+
+    <span class="fn">free</span>(arr);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Enter 5 numbers: <span class="in">10 20 30 40 50</span>
+Sum: 150.00
+Average: 30.00</pre>
+    </div></div>
+  </div>
+
+  <!-- ===================== SECTION: STRING HANDLING ===================== -->
+  <div class="section-title"><h2>String Handling</h2><div class="rule"></div></div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S1</span>
+      <span class="q-text"><b>Manual String Concatenation:</b> Write a program to concatenate two strings without using the <code>strcat()</code> function.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s1">Show Answer</button></div>
+    <div class="answer" id="s1"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Concatenate two strings without strcat</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">void</span> <span class="fn">myStrcat</span>(<span class="tp">char</span> s1[], <span class="tp">char</span> s2[]) {
+    <span class="tp">int</span> i = <span class="str">0</span>, j = <span class="str">0</span>;
+
+    <span class="kw">while</span> (s1[i] != <span class="str">'\0'</span>) i++;
+    <span class="kw">while</span> (s2[j] != <span class="str">'\0'</span>) {
+        s1[i] = s2[j];
+        i++; j++;
+    }
+    s1[i] = <span class="str">'\0'</span>;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> s1[<span class="str">50</span>] = <span class="str">"Hello, "</span>;
+    <span class="tp">char</span> s2[] = <span class="str">"World!"</span>;
+
+    <span class="fn">myStrcat</span>(s1, s2);
+
+    <span class="fn">printf</span>(<span class="str">"Concatenated string: %s\n"</span>, s1);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Concatenated string: Hello, World!</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S2</span>
+      <span class="q-text"><b>Standard String Concatenation:</b> Write a program to concatenate two strings using the <code>strcat()</code> function.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s2">Show Answer</button></div>
+    <div class="answer" id="s2"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Concatenate two strings using strcat</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;string.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> s1[<span class="str">50</span>] = <span class="str">"Hello, "</span>;
+    <span class="tp">char</span> s2[] = <span class="str">"World!"</span>;
+
+    <span class="fn">strcat</span>(s1, s2);
+
+    <span class="fn">printf</span>(<span class="str">"Concatenated string: %s\n"</span>, s1);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Concatenated string: Hello, World!</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S3</span>
+      <span class="q-text"><b>String Comparison:</b> Write a program to compare two strings.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s3">Show Answer</button></div>
+    <div class="answer" id="s3"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Compare two strings</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;string.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> s1[] = <span class="str">"apple"</span>;
+    <span class="tp">char</span> s2[] = <span class="str">"banana"</span>;
+
+    <span class="tp">int</span> result = <span class="fn">strcmp</span>(s1, s2);
+
+    <span class="kw">if</span> (result == <span class="str">0</span>)
+        <span class="fn">printf</span>(<span class="str">"Strings are equal\n"</span>);
+    <span class="kw">else if</span> (result &lt; <span class="str">0</span>)
+        <span class="fn">printf</span>(<span class="str">"\"%s\" comes before \"%s\"\n"</span>, s1, s2);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"\"%s\" comes after \"%s\"\n"</span>, s1, s2);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">"apple" comes before "banana"</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S4</span>
+      <span class="q-text"><b>Case Conversion (Lower to Upper):</b> Write a program to convert all lowercase characters in a string to uppercase.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s4">Show Answer</button></div>
+    <div class="answer" id="s4"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Convert lowercase characters to uppercase</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"Hello World"</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++) {
+        <span class="kw">if</span> (<span class="fn">islower</span>(str[i]))
+            str[i] = <span class="fn">toupper</span>(str[i]);
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Uppercase: %s\n"</span>, str);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Uppercase: HELLO WORLD</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S5</span>
+      <span class="q-text"><b>Case Conversion (Upper to Lower):</b> Write a program to convert all uppercase characters in a string to lowercase.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s5">Show Answer</button></div>
+    <div class="answer" id="s5"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Convert uppercase characters to lowercase</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"Hello World"</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++) {
+        <span class="kw">if</span> (<span class="fn">isupper</span>(str[i]))
+            str[i] = <span class="fn">tolower</span>(str[i]);
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Lowercase: %s\n"</span>, str);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Lowercase: hello world</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S6</span>
+      <span class="q-text"><b>Vowel Counter:</b> Write a program to calculate the number of vowels in a string.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s6">Show Answer</button></div>
+    <div class="answer" id="s6"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Count the number of vowels in a string</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;ctype.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"Programming in C is fun"</span>;
+    <span class="tp">int</span> count = <span class="str">0</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="str">0</span>; str[i] != <span class="str">'\0'</span>; i++) {
+        <span class="tp">char</span> c = <span class="fn">tolower</span>(str[i]);
+        <span class="kw">if</span> (c == <span class="str">'a'</span> || c == <span class="str">'e'</span> || c == <span class="str">'i'</span> || c == <span class="str">'o'</span> || c == <span class="str">'u'</span>)
+            count++;
+    }
+
+    <span class="fn">printf</span>(<span class="str">"Number of vowels: %d\n"</span>, count);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">Number of vowels: 6</pre>
+    </div></div>
+  </div>
+
+  <div class="question">
+    <div class="q-head"><span class="q-num">S7</span>
+      <span class="q-text"><b>String Reversal:</b> Write a program to reverse a string.</span>
+    </div>
+    <div class="q-footer"><button class="show-btn" data-target="s7">Show Answer</button></div>
+    <div class="answer" id="s7"><div class="answer-inner">
+      <div class="panel-label">Example Program</div>
+      <pre class="code-block"><code><span class="cm">// Reverse a string</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;string.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">char</span> str[] = <span class="str">"Hello, World!"</span>;
+    <span class="tp">int</span> len = <span class="fn">strlen</span>(str);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = len - <span class="str">1</span>; i &gt;= <span class="str">0</span>; i--)
+        <span class="fn">printf</span>(<span class="str">"%c"</span>, str[i]);
+    <span class="fn">printf</span>(<span class="str">"\n"</span>);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+      <div class="output-label">Output</div>
+      <pre class="output-block">!dlroW ,olleH</pre>
+    </div></div>
+  </div>
+
+  <footer>&lt;/&gt; try each one before revealing the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

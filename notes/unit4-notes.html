@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Unit 4 - Notes</title>
+
+    <link rel="stylesheet" href="unit-notes.css">
+
+    <!-- Styles for the embedded PDF viewer. Move these into unit1-notes.css if you'd rather keep one stylesheet. -->
+    <style>
+        .pdf-viewer {
+            display: none;
+            margin-top: 28px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .pdf-viewer.is-open {
+            display: block;
+        }
+
+        .pdf-viewer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 18px;
+            background: #f4f4f5;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .pdf-viewer-header h3 {
+            margin: 0;
+            font-size: 15px;
+        }
+
+        .pdf-viewer-close {
+            border: none;
+            background: #e5e5e7;
+            color: #333;
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .pdf-viewer-close:hover {
+            background: #dcdce0;
+        }
+
+        .pdf-viewer embed {
+            width: 100%;
+            height: 80vh;
+            display: block;
+        }
+
+        .topic-card.is-active {
+            outline: 2px solid #4a4a4a;
+        }
+        /* Mindmap section: dedicated show/hide button + collapsible panel,
+           same interaction pattern as the pyq page's show-btn/.answer toggle. */
+        .mindmap-section {
+            margin-top: 40px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--panel);
+        }
+
+        .mindmap-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 18px 22px;
+        }
+
+        .mindmap-head h2 {
+            margin: 0 0 4px;
+            font-size: 18px;
+            color: var(--text);
+        }
+
+        .mindmap-head p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13.5px;
+        }
+
+        .mindmap-btn {
+            font-family: var(--mono);
+            font-size: 12.5px;
+            letter-spacing: 0.03em;
+            color: var(--bg);
+            background: var(--accent);
+            border: none;
+            border-radius: 6px;
+            padding: 9px 16px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: opacity 0.15s ease, transform 0.1s ease;
+        }
+
+        .mindmap-btn:hover { opacity: 0.88; }
+        .mindmap-btn:active { transform: translateY(1px); }
+
+        .mindmap-btn.is-open {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .mindmap-panel {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.28s ease;
+            border-top: 1px solid var(--border);
+        }
+
+        .mindmap-panel.open {
+            grid-template-rows: 1fr;
+        }
+
+        .mindmap-panel-inner {
+            overflow: hidden;
+        }
+
+        .mindmap-frame {
+            background: var(--bg);
+        }
+
+        .mindmap-frame img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="page-header">
+            <p class="subject">C for Beginners</p>
+            <h1>Unit 4 - Notes</h1>
+            <p class="description">
+                Select a topic to view the notes.
+            </p>
+        </div>
+
+
+        <div class="topics-list">
+
+            <!-- Topic 1 -->
+            <a
+                class="topic-card"
+                href="../pdfs/Unit4/Unit4-Structures_Unions_Notes.pdf"
+                data-pdf="../pdfs/Unit4/Unit4-Structures_Unions_Notes.pdf"
+                data-title="Topic 1"
+            >
+                <div class="topic-number">01</div>
+
+                <div class="topic-info">
+                    <h2>Structures and Unions</h2>
+                    <p>View notes for Structures and Unions</p>
+                </div>
+
+                <div class="arrow">→</div>
+            </a>
+
+
+            <!-- Topic 2 -->
+            <a
+                class="topic-card"
+                href="../pdfs/Unit4/Unit-FileManagement_Notes.pdf"
+                data-pdf="../pdfs/Unit4/Unit-FileManagement_Notes.pdf"
+                data-title="Topic 2"
+            >
+                <div class="topic-number">02</div>
+
+                <div class="topic-info">
+                    <h2>File Management</h2>
+                    <p>View notes for File Management</p>
+                </div>
+
+                <div class="arrow">→</div>
+            </a>
+
+        </div>
+
+
+        <!-- Embedded PDF viewer: filled in and shown when a topic card is clicked -->
+        <div class="pdf-viewer" id="pdfViewer">
+            <div class="pdf-viewer-header">
+                <h3 id="pdfViewerTitle">Notes</h3>
+                <button class="pdf-viewer-close" id="pdfViewerClose" type="button">Close ✕</button>
+            </div>
+            <embed id="pdfEmbed" src="" type="application/pdf">
+        </div>
+        <!-- Unit 4 mindmap: placeholder image, swap the src for the real PNG when ready -->
+        <div class="mindmap-section">
+            <div class="mindmap-head">
+                <div>
+                    <h2>Unit 4 Mindmap</h2>
+                    <p>A visual summary of all topics in this unit.</p>
+                </div>
+                <button class="mindmap-btn" id="mindmapBtn" type="button">Show Mindmap</button>
+            </div>
+            <div class="mindmap-panel" id="mindmapPanel">
+                <div class="mindmap-panel-inner">
+                    <div class="mindmap-frame">
+                        <img
+                            src="mindmap/unit4.png"
+                            alt="Unit 4 Mindmap"
+                        >
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        const topicCards = document.querySelectorAll('.topic-card');
+        const viewer = document.getElementById('pdfViewer');
+        const viewerTitle = document.getElementById('pdfViewerTitle');
+        const viewerEmbed = document.getElementById('pdfEmbed');
+        const viewerClose = document.getElementById('pdfViewerClose');
+
+        topicCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const pdfUrl = card.dataset.pdf;
+                const title = card.dataset.title || 'Notes';
+
+                // Highlight the active card
+                topicCards.forEach(c => c.classList.remove('is-active'));
+                card.classList.add('is-active');
+
+                viewerTitle.textContent = title;
+                viewerEmbed.setAttribute('src', pdfUrl);
+                viewer.classList.add('is-open');
+
+                // Scroll the viewer into view
+                viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        viewerClose.addEventListener('click', () => {
+            viewer.classList.remove('is-open');
+            viewerEmbed.setAttribute('src', '');
+            topicCards.forEach(c => c.classList.remove('is-active'));
+        });
+        const mindmapBtn = document.getElementById('mindmapBtn');
+        const mindmapPanel = document.getElementById('mindmapPanel');
+
+        mindmapBtn.addEventListener('click', () => {
+            const isOpen = mindmapPanel.classList.toggle('open');
+            mindmapBtn.textContent = isOpen ? 'Hide Mindmap' : 'Show Mindmap';
+            mindmapBtn.classList.toggle('is-open', isOpen);
+
+            if (isOpen) {
+                mindmapPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        });
+    </script>
+
+</body>
+
+</html>

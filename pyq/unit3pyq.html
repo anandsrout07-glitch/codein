@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3 PYQs — Pointers, Functions &amp; Storage Classes</title>
+<style>
+  :root{
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --code-bg: #12141a;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --green: #7fd68a;
+    --green-soft: #7fd68a26;
+    --blue: #6fb3e0;
+    --blue-soft: #6fb3e026;
+    --purple: #b18cd9;
+    --purple-soft: #b18cd926;
+    --red: #e07f7f;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    padding: 48px 20px 80px;
+    line-height: 1.5;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  header{
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+  }
+
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  header p{
+    margin: 0;
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+
+  .legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .legend span{
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    letter-spacing: 0.04em;
+  }
+
+  .tag{
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    border-radius: 5px;
+    padding: 3px 7px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+
+  .tag-mcq{ color: var(--blue); background: var(--blue-soft); }
+  .tag-vsq{ color: var(--green); background: var(--green-soft); }
+  .tag-sq{  color: var(--accent); background: var(--accent-soft); }
+  .tag-lq{  color: var(--purple); background: var(--purple-soft); }
+
+  .question{
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel);
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .q-head{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 22px;
+  }
+
+  .q-num{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .q-body{ flex: 1; min-width: 0; }
+
+  .q-tags{ display: flex; gap: 8px; margin-bottom: 8px; }
+
+  .q-text{
+    font-size: 15.5px;
+    color: var(--text);
+  }
+
+  .q-text b{
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .options{
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+  }
+
+  .options li{
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--muted);
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+
+  .q-footer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 22px 20px;
+  }
+
+  .show-btn{
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--bg);
+    background: var(--accent);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+
+  .show-btn:hover{ opacity: 0.88; }
+  .show-btn:active{ transform: translateY(1px); }
+
+  .show-btn.is-open{
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+
+  .answer{
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+    border-top: 1px solid var(--border);
+  }
+
+  .answer.open{
+    grid-template-rows: 1fr;
+  }
+
+  .answer-inner{
+    overflow: hidden;
+  }
+
+  .panel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .answer-text{
+    margin: 0;
+    padding: 16px 22px 20px;
+    font-size: 14.5px;
+    color: var(--text);
+  }
+
+  .answer-text p{ margin: 0 0 10px; }
+  .answer-text p:last-child{ margin-bottom: 0; }
+  .answer-text ul{ margin: 8px 0 10px; padding-left: 20px; }
+  .answer-text li{ margin-bottom: 6px; }
+
+  .correct-opt{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--green);
+    background: var(--green-soft);
+    border: 1px solid #7fd68a55;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 16px 22px 0;
+  }
+
+  pre.code-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 18px 22px;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  code .cm{ color: var(--muted); font-style: italic; }
+  code .kw{ color: var(--purple); }
+  code .tp{ color: var(--blue); }
+  code .fn{ color: var(--accent); }
+  code .str{ color: var(--green); }
+
+  .output-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 22px 8px;
+    background: #1e222a;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  pre.output-block{
+    margin: 0;
+    background: var(--code-bg);
+    padding: 16px 22px 20px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    color: var(--green);
+  }
+
+  footer{
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    margin-top: 40px;
+    font-family: var(--mono);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Unit 3 — Previous Year Questions</p>
+    <h1>Pointers, Functions &amp; Storage Classes</h1>
+    <p>Pointers, Pointer Arithmetic, Recursion, String Handling Functions (strcpy, etc.), Storage Classes (auto, register, etc.), and Dynamic Memory Management (malloc).</p>
+    <div class="legend">
+      <span class="tag-mcq" style="background:var(--blue-soft);color:var(--blue);">MCQ</span>
+      <span class="tag-vsq" style="background:var(--green-soft);color:var(--green);">VSQ</span>
+      <span class="tag-sq" style="background:var(--accent-soft);color:var(--accent);">SQ</span>
+      <span class="tag-lq" style="background:var(--purple-soft);color:var(--purple);">LQ</span>
+    </div>
+  </header>
+
+  <!-- Q1 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q1</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which pointer can point to a variable of any data type?</span>
+        <ul class="options">
+          <li>(a) generic</li>
+          <li>(b) NULL</li>
+          <li>(c) wild</li>
+          <li>(d) dangling</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a1">Show Answer</button>
+    </div>
+    <div class="answer" id="a1">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (a) generic</div>
+        <div class="answer-text">
+          <p>A <b>generic pointer</b> (declared as <code>void *</code>) can point to a variable of any data type since it carries no type information of its own — it must be cast before dereferencing. A NULL pointer points to nothing, a wild pointer is uninitialized (points to a random location), and a dangling pointer points to memory that has already been freed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q2</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following storage classes is suitable for faster execution of a program?</span>
+        <ul class="options">
+          <li>(a) auto</li>
+          <li>(b) register</li>
+          <li>(c) static</li>
+          <li>(d) extern</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a2">Show Answer</button>
+    </div>
+    <div class="answer" id="a2">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (b) register</div>
+        <div class="answer-text">
+          <p>The <code>register</code> storage class suggests storing a variable in a CPU register (when possible) rather than main memory, allowing much faster access — useful for variables like loop counters that are accessed frequently.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q3</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ</span></div>
+        <span class="q-text">Which of the following statements is CORRECT?</span>
+        <ul class="options">
+          <li>(a) Function declaration specifies only the function name and its return type</li>
+          <li>(b) A function can call itself</li>
+          <li>(c) A function definition must contain a return statement</li>
+          <li>(d) A function written by a user is called a built-in function</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a3">Show Answer</button>
+    </div>
+    <div class="answer" id="a3">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (b) A function can call itself</div>
+        <div class="answer-text">
+          <p>This is <b>recursion</b> — a function calling itself is completely valid in C. The other statements are false: a function declaration (prototype) must also specify the parameter types, not just the name and return type; a <code>void</code> function need not contain a <code>return</code> statement; and a user-written function is a <i>user-defined</i> function, not a built-in one (built-in functions come from the standard library).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q4</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">What does the auto storage class indicate?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a4">Show Answer</button>
+    </div>
+    <div class="answer" id="a4">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><code>auto</code> is the default storage class for local variables inside a function or block. Such variables are automatically created when the block is entered and automatically destroyed when it exits, and have local scope with an uninitialized default value. Writing <code>auto int x;</code> is equivalent to just writing <code>int x;</code> inside a function.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q5</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">Write the syntax of the strcpy() function.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a5">Show Answer</button>
+    </div>
+    <div class="answer" id="a5">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <pre class="code-block"><code><span class="tp">char</span> *<span class="fn">strcpy</span>(<span class="tp">char</span> *dest, <span class="kw">const</span> <span class="tp">char</span> *src);</code></pre>
+        <div class="answer-text">
+          <p><code>strcpy()</code> (declared in <code>string.h</code>) copies the string pointed to by <code>src</code>, including the null terminator, into the buffer pointed to by <code>dest</code>, and returns <code>dest</code>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q6</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">Give an example of pointer arithmetic.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a6">Show Answer</button>
+    </div>
+    <div class="answer" id="a6">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <pre class="code-block"><code><span class="tp">int</span> arr[] = {<span class="str">10</span>, <span class="str">20</span>, <span class="str">30</span>};
+<span class="tp">int</span> *p = arr;      <span class="cm">// p points to arr[0]</span>
+
+p++;                <span class="cm">// p now points to arr[1] (address moves by sizeof(int))</span>
+<span class="fn">printf</span>(<span class="str">"%d"</span>, *p);  <span class="cm">// prints 20</span></code></pre>
+        <div class="answer-text">
+          <p>When a pointer is incremented, it advances by the <i>size of the type it points to</i> (here, 4 bytes for <code>int</code>), not by 1 byte — this lets pointers move naturally element-by-element through an array.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q7</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ</span></div>
+        <span class="q-text">Write a recursive function to find the factorial of a number.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a7">Show Answer</button>
+    </div>
+    <div class="answer" id="a7">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <pre class="code-block"><code><span class="tp">int</span> <span class="fn">factorial</span>(<span class="tp">int</span> n) {
+    <span class="kw">if</span> (n == <span class="str">0</span> || n == <span class="str">1</span>)
+        <span class="kw">return</span> <span class="str">1</span>;         <span class="cm">// base case</span>
+    <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="str">1</span>);  <span class="cm">// recursive case</span>
+}</code></pre>
+        <div class="answer-text">
+          <p>The function keeps calling itself with a smaller value of <code>n</code> until it hits the base case (<code>n == 0</code> or <code>1</code>), then the results multiply back up the call stack.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q8</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Define a function that takes three integer arguments and returns the largest among them. Call the function from main().</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a8">Show Answer</button>
+    </div>
+    <div class="answer" id="a8">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Largest of three integers</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">largest</span>(<span class="tp">int</span> a, <span class="tp">int</span> b, <span class="tp">int</span> c) {
+    <span class="tp">int</span> max = a;
+    <span class="kw">if</span> (b &gt; max) max = b;
+    <span class="kw">if</span> (c &gt; max) max = c;
+    <span class="kw">return</span> max;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> x = <span class="str">15</span>, y = <span class="str">42</span>, z = <span class="str">7</span>;
+    <span class="fn">printf</span>(<span class="str">"Largest = %d\n"</span>, <span class="fn">largest</span>(x, y, z));
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Largest = 42</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q9 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q9</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Write a function to swap the values of two variables using pointers.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a9">Show Answer</button>
+    </div>
+    <div class="answer" id="a9">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Swap using pointers (call-by-reference)</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">swap</span>(<span class="tp">int</span> *a, <span class="tp">int</span> *b) {
+    <span class="tp">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> x = <span class="str">5</span>, y = <span class="str">10</span>;
+    <span class="fn">swap</span>(&amp;x, &amp;y);
+    <span class="fn">printf</span>(<span class="str">"x = %d, y = %d\n"</span>, x, y);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">x = 10, y = 5</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q10 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q10</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ</span></div>
+        <span class="q-text">Write a C program to demonstrate the use of a user-defined function to check whether a number is a palindrome or not.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a10">Show Answer</button>
+    </div>
+    <div class="answer" id="a10">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Palindrome check using a user-defined function</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="tp">int</span> <span class="fn">isPalindrome</span>(<span class="tp">int</span> n) {
+    <span class="tp">int</span> original = n, reversed = <span class="str">0</span>, digit;
+    <span class="kw">while</span> (n &gt; <span class="str">0</span>) {
+        digit = n % <span class="str">10</span>;
+        reversed = reversed * <span class="str">10</span> + digit;
+        n /= <span class="str">10</span>;
+    }
+    <span class="kw">return</span> (original == reversed);
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> num = <span class="str">121</span>;
+    <span class="kw">if</span> (<span class="fn">isPalindrome</span>(num))
+        <span class="fn">printf</span>(<span class="str">"%d is a palindrome\n"</span>, num);
+    <span class="kw">else</span>
+        <span class="fn">printf</span>(<span class="str">"%d is not a palindrome\n"</span>, num);
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">121 is a palindrome</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q11 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q11</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ</span></div>
+        <span class="q-text">What do you mean by dynamic memory management? Explain various dynamic memory management functions.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a11">Show Answer</button>
+    </div>
+    <div class="answer" id="a11">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><b>Dynamic memory management</b> is the allocation and deallocation of memory at run time (from the heap) rather than at compile time, allowing a program to request exactly the amount of memory it needs while it is running, and release it when no longer needed. It is essential when the required memory size isn't known in advance.</p>
+          <ul>
+            <li><code>malloc(size)</code> — allocates a block of <code>size</code> bytes with uninitialized (garbage) content, and returns a <code>void*</code> pointer to it (or NULL on failure).</li>
+            <li><code>calloc(n, size)</code> — allocates memory for <code>n</code> elements of <code>size</code> bytes each, and initializes all bytes to zero.</li>
+            <li><code>realloc(ptr, newSize)</code> — resizes a previously allocated block to <code>newSize</code>, preserving existing content as far as it fits.</li>
+            <li><code>free(ptr)</code> — releases previously allocated memory back to the system, preventing memory leaks.</li>
+          </ul>
+        </div>
+        <pre class="code-block"><code><span class="kw">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+
+<span class="tp">int</span> *arr = (<span class="tp">int</span>*) <span class="fn">malloc</span>(<span class="str">5</span> * <span class="kw">sizeof</span>(<span class="tp">int</span>));
+<span class="kw">if</span> (arr != <span class="tp">NULL</span>) {
+    <span class="cm">// use arr[0..4]</span>
+    <span class="fn">free</span>(arr);
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q12 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q12</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ</span></div>
+        <span class="q-text">Write a program to sort an array of integers using pointers. Explain how pointer arithmetic helps in sorting.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a12">Show Answer</button>
+    </div>
+    <div class="answer" id="a12">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>Since an array name decays to a pointer to its first element, and array elements are stored contiguously, a pointer can be advanced (<code>p+i</code>) to reach any element without using array-index syntax. This lets a sort compare and swap elements purely through pointer dereferencing and pointer arithmetic, which is often closer to how the compiler accesses memory and can be marginally faster.</p>
+        </div>
+        <div class="panel-label">Example Program (Bubble sort using pointers)</div>
+        <pre class="code-block"><code><span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">sortArray</span>(<span class="tp">int</span> *arr, <span class="tp">int</span> n) {
+    <span class="tp">int</span> i, j, temp;
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; n - <span class="str">1</span>; i++) {
+        <span class="kw">for</span> (j = <span class="str">0</span>; j &lt; n - i - <span class="str">1</span>; j++) {
+            <span class="kw">if</span> (*(arr + j) &gt; *(arr + j + <span class="str">1</span>)) {
+                temp = *(arr + j);
+                *(arr + j) = *(arr + j + <span class="str">1</span>);
+                *(arr + j + <span class="str">1</span>) = temp;
+            }
+        }
+    }
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> nums[] = {<span class="str">5</span>, <span class="str">2</span>, <span class="str">9</span>, <span class="str">1</span>, <span class="str">7</span>};
+    <span class="tp">int</span> n = <span class="str">5</span>, i;
+
+    <span class="fn">sortArray</span>(nums, n);
+
+    <span class="fn">printf</span>(<span class="str">"Sorted array: "</span>);
+    <span class="kw">for</span> (i = <span class="str">0</span>; i &lt; n; i++)
+        <span class="fn">printf</span>(<span class="str">"%d "</span>, *(nums + i));
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output</div>
+        <pre class="output-block">Sorted array: 1 2 5 7 9</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q13 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q13</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (e)</span></div>
+        <span class="q-text">What does *ptr mean in C?</span>
+        <ul class="options">
+          <li>(i) Value stored at the address ptr points to</li>
+          <li>(ii) Address of ptr</li>
+          <li>(iii) Declaring ptr as a pointer</li>
+          <li>(iv) None of the above</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a13">Show Answer</button>
+    </div>
+    <div class="answer" id="a13">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (i) Value stored at the address ptr points to</div>
+        <div class="answer-text">
+          <p>When used on an already-declared pointer, <code>*</code> is the <b>dereference operator</b> — it accesses (reads or writes) the value at the memory address the pointer holds. (<code>*</code> only means "declare a pointer" when it appears in a type declaration like <code>int *ptr;</code>.)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q14 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q14</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-mcq">MCQ (f)</span></div>
+        <span class="q-text">What is the scope of a variable declared with the static keyword?</span>
+        <ul class="options">
+          <li>(i) Local to the block and persists between function calls</li>
+          <li>(ii) Global across the program</li>
+          <li>(iii) Local only to the function</li>
+          <li>(iv) Dynamic</li>
+        </ul>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a14">Show Answer</button>
+    </div>
+    <div class="answer" id="a14">
+      <div class="answer-inner">
+        <div class="correct-opt">✓ Correct option: (i) Local to the block and persists between function calls</div>
+        <div class="answer-text">
+          <p>A <code>static</code> local variable keeps its scope restricted to the block it's declared in (like a normal local variable), but unlike <code>auto</code> variables, it retains its value between successive calls to the function because it's allocated for the lifetime of the program rather than the lifetime of the block.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q15 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q15</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (f)</span></div>
+        <span class="q-text">Define a pointer. What is a NULL pointer, and when is it used?</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a15">Show Answer</button>
+    </div>
+    <div class="answer" id="a15">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>A <b>pointer</b> is a variable that stores the memory address of another variable, rather than a data value directly. It is declared using <code>*</code>, e.g. <code>int *p;</code>.</p>
+          <p>A <b>NULL pointer</b> is a pointer explicitly assigned the value <code>NULL</code> (typically 0), meaning it points to no valid memory location. It is commonly used to initialize a pointer before it's assigned a real address, and to signal or check "no value" — for example, checking <code>if (ptr == NULL)</code> after a <code>malloc()</code> call to detect allocation failure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q16 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q16</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (g)</span></div>
+        <span class="q-text">Explain the difference between call-by-value and call-by-reference with examples.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a16">Show Answer</button>
+    </div>
+    <div class="answer" id="a16">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p>In <b>call-by-value</b>, a copy of the argument's value is passed to the function, so changes made inside the function do not affect the original variable. In <b>call-by-reference</b> (simulated in C using pointers), the address of the argument is passed, so the function can modify the original variable directly.</p>
+        </div>
+        <pre class="code-block"><code><span class="cm">// Call-by-value: original is unchanged</span>
+<span class="kw">void</span> <span class="fn">modify</span>(<span class="tp">int</span> x) { x = <span class="str">100</span>; }
+
+<span class="cm">// Call-by-reference: original is changed</span>
+<span class="kw">void</span> <span class="fn">modifyRef</span>(<span class="tp">int</span> *x) { *x = <span class="str">100</span>; }
+
+<span class="tp">int</span> a = <span class="str">5</span>;
+<span class="fn">modify</span>(a);       <span class="cm">// a is still 5</span>
+<span class="fn">modifyRef</span>(&amp;a);   <span class="cm">// a becomes 100</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q17 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q17</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-vsq">VSQ (h)</span></div>
+        <span class="q-text">What are storage classes in C? Describe the purpose of the static storage class.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a17">Show Answer</button>
+    </div>
+    <div class="answer" id="a17">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><b>Storage classes</b> in C determine a variable's scope (visibility), lifetime (how long it exists in memory), default initial value, and storage location. C provides four: <code>auto</code>, <code>register</code>, <code>static</code>, and <code>extern</code>.</p>
+          <p>The <b>static</b> storage class makes a variable retain its value across function calls (for local variables) instead of being destroyed when the block ends, and, when applied to a global variable or function, restricts its visibility to the file it's declared in. It's commonly used for counters that must persist between calls, such as tracking how many times a function has been invoked.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q18 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q18</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (g)</span></div>
+        <span class="q-text">Explain the difference between dynamic and static memory allocation in C. Include examples of malloc, calloc, and realloc.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a18">Show Answer</button>
+    </div>
+    <div class="answer" id="a18">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <p><b>Static memory allocation</b> happens at compile time — the size and type of variables (e.g. <code>int arr[10];</code>) are fixed before the program runs, and memory is allocated on the stack. <b>Dynamic memory allocation</b> happens at run time — memory is requested from the heap as needed using library functions, and the size can be decided while the program is running.</p>
+        </div>
+        <pre class="code-block"><code><span class="kw">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+
+<span class="cm">// malloc: allocates uninitialized memory</span>
+<span class="tp">int</span> *a = (<span class="tp">int</span>*) <span class="fn">malloc</span>(<span class="str">5</span> * <span class="kw">sizeof</span>(<span class="tp">int</span>));
+
+<span class="cm">// calloc: allocates and zero-initializes memory</span>
+<span class="tp">int</span> *b = (<span class="tp">int</span>*) <span class="fn">calloc</span>(<span class="str">5</span>, <span class="kw">sizeof</span>(<span class="tp">int</span>));
+
+<span class="cm">// realloc: resizes a previously allocated block</span>
+b = (<span class="tp">int</span>*) <span class="fn">realloc</span>(b, <span class="str">10</span> * <span class="kw">sizeof</span>(<span class="tp">int</span>));
+
+<span class="fn">free</span>(a);
+<span class="fn">free</span>(b);</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q19 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q19</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-sq">SQ (h)</span></div>
+        <span class="q-text">Write a program in C to swap two numbers using pointers.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a19">Show Answer</button>
+    </div>
+    <div class="answer" id="a19">
+      <div class="answer-inner">
+        <div class="panel-label">Example Program</div>
+        <pre class="code-block"><code><span class="cm">// Swap two numbers entered by the user, using pointers</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">swap</span>(<span class="tp">int</span> *a, <span class="tp">int</span> *b) {
+    <span class="tp">int</span> temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="tp">int</span> x, y;
+
+    <span class="fn">printf</span>(<span class="str">"Enter two integers: "</span>);
+    <span class="fn">scanf</span>(<span class="str">"%d %d"</span>, &amp;x, &amp;y);
+
+    <span class="fn">swap</span>(&amp;x, &amp;y);
+
+    <span class="fn">printf</span>(<span class="str">"After swap: x = %d, y = %d\n"</span>, x, y);
+
+    <span class="kw">return</span> <span class="str">0</span>;
+}</code></pre>
+        <div class="output-label">Output (sample: 5 10)</div>
+        <pre class="output-block">Enter two integers: 5 10
+After swap: x = 10, y = 5</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q20 -->
+  <div class="question">
+    <div class="q-head">
+      <span class="q-num">Q20</span>
+      <div class="q-body">
+        <div class="q-tags"><span class="tag tag-lq">LQ (c)</span></div>
+        <span class="q-text">Discuss the various types of storage classes in C (auto, static, register, extern). Provide examples.</span>
+      </div>
+    </div>
+    <div class="q-footer">
+      <button class="show-btn" data-target="a20">Show Answer</button>
+    </div>
+    <div class="answer" id="a20">
+      <div class="answer-inner">
+        <div class="panel-label">Answer</div>
+        <div class="answer-text">
+          <ul>
+            <li><b>auto:</b> the default storage class for local variables — scope is local to the block, lifetime lasts only while the block executes, and default value is garbage/undefined.</li>
+            <li><b>register:</b> requests that a variable be stored in a CPU register for faster access (the compiler may ignore this if no register is available) — scope and lifetime are the same as <code>auto</code>, but the address-of operator (<code>&amp;</code>) cannot be used on it.</li>
+            <li><b>static:</b> scope is local to the block (or file, for globals/functions), but lifetime extends across the entire program — the value persists between function calls, and default value is 0.</li>
+            <li><b>extern:</b> declares a variable or function that is defined elsewhere (often in another file), giving it global scope and program lifetime without allocating new storage for it.</li>
+          </ul>
+        </div>
+        <pre class="code-block"><code><span class="kw">void</span> <span class="fn">counter</span>() {
+    <span class="kw">auto</span> <span class="tp">int</span> a = <span class="str">0</span>;      <span class="cm">// resets to 0 every call</span>
+    <span class="kw">static</span> <span class="tp">int</span> b = <span class="str">0</span>;    <span class="cm">// retains value between calls</span>
+    <span class="kw">register</span> <span class="tp">int</span> c;    <span class="cm">// requested to live in a CPU register</span>
+
+    a++; b++;
+    <span class="fn">printf</span>(<span class="str">"a = %d, b = %d\n"</span>, a, b);
+}
+
+<span class="cm">// in another file:</span>
+<span class="kw">extern</span> <span class="tp">int</span> globalCount;  <span class="cm">// refers to a variable defined elsewhere</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <footer>&lt;/&gt; tap a question type tag to know what's expected — then reveal the answer</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.show-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const panel = document.getElementById(btn.dataset.target);
+      const isOpen = panel.classList.toggle('open');
+      btn.textContent = isOpen ? 'Hide Answer' : 'Show Answer';
+      btn.classList.toggle('is-open', isOpen);
+    });
+  });
+</script>
+</body>
+</html>

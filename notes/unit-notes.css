@@ -1,0 +1,191 @@
+:root {
+    --bg: #16181d;
+    --panel: #1b1e24;
+    --border: #2a2e37;
+    --text: #d7dae0;
+    --muted: #838a99;
+    --accent: #e0a75e;
+    --accent-soft: #e0a75e33;
+    --mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.container {
+    width: 760px;
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 48px 20px 80px;
+}
+
+
+/* Header */
+
+.page-header {
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px;
+}
+
+.subject {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.page-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+}
+
+.description {
+    font-size: 14.5px;
+    color: var(--muted);
+}
+
+
+/* Topics */
+
+.topics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* Topic Card */
+
+.topic-card {
+    min-height: 95px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 18px 22px;
+
+    background: var(--panel);
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    text-decoration: none;
+    color: var(--text);
+
+    transition: 0.2s ease;
+}
+
+
+/* Hover */
+
+.topic-card:hover {
+    transform: translateY(-2px);
+    border-color: #3a3f4b;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
+}
+
+
+/* Number */
+
+.topic-number {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 18px;
+
+    border-radius: 6px;
+
+    background: var(--accent-soft);
+    color: var(--accent);
+
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* Topic Information */
+
+.topic-info {
+    flex: 1;
+}
+
+.topic-info h2 {
+    font-size: 16.5px;
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+.topic-info p {
+    font-size: 13.5px;
+    color: var(--muted);
+}
+
+
+/* Arrow */
+
+.arrow {
+    font-family: var(--mono);
+    font-size: 20px;
+    color: var(--accent);
+    margin-left: 15px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 650px) {
+
+    .container {
+        max-width: 92%;
+        padding: 30px 15px 60px;
+    }
+
+    .page-header h1 {
+        font-size: 24px;
+    }
+
+    .topic-card {
+        min-height: 85px;
+        padding: 15px;
+    }
+
+    .topic-number {
+        width: 36px;
+        height: 36px;
+        margin-right: 13px;
+    }
+
+    .topic-info h2 {
+        font-size: 15px;
+    }
+
+    .topic-info p {
+        font-size: 12.5px;
+    }
+
+    .arrow {
+        font-size: 18px;
+    }
+}
